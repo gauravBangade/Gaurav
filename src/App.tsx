@@ -13,12 +13,12 @@ function App() {
 
         {/* Title */}
         <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-pink-400 to-cyan-400 tracking-tight">
-          React + TS + Tailwind
+          Hi Parth !!!
         </h1>
 
         {/* Subtitle */}
         <p className="text-lg text-slate-400 max-w-md mx-auto">
-          A modern starter template powered by Vite, React, TypeScript &amp; Tailwind CSS.
+          I kept my word you better keep yours
         </p>
 
         {/* Counter card */}
@@ -32,11 +32,6 @@ function App() {
             Click me
           </button>
         </div>
-
-        {/* Footer hint */}
-        <p className="text-sm text-slate-500">
-          Edit <code className="text-violet-400 bg-white/5 px-2 py-1 rounded">src/App.tsx</code> and save to see HMR in action.
-        </p>
       </div>
     </div>
   )
