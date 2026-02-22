@@ -1,19 +1,36 @@
 import { useState, useRef } from "react";
 import "./App.css";
+import About from "./components/About";
+import JsonFormatter from "./components/JsonFormatter";
+import Education from "./components/Education";
 
 type Card = {
   id: number;
   title: string;
   description: string;
+  component: React.ReactNode;
 };
 
 const CARDS: Card[] = [
-  { id: 1, title: "Analytics", description: "View detailed insights and metrics." },
-  { id: 2, title: "Projects", description: "Manage and explore your projects." },
-  { id: 3, title: "Settings", description: "Customize your preferences." },
-  { id: 4, title: "Profile", description: "View and edit your profile." },
+  {
+    id: 1,
+    title: "About",
+    description: "Learn more about me.",
+    component: <About />,
+  },
+  {
+    id: 2,
+    title: "Education",
+    description: "My education background.",
+    component: <Education />,
+  },
+  {
+    id: 3,
+    title: "JSON Formatter",
+    description: "Format and validate JSON.",
+    component: <JsonFormatter />,
+  },
 ];
-
 type Rect = {
   top: number;
   left: number;
@@ -117,11 +134,11 @@ export default function App() {
                   ← Back
                 </button>
 
-                <h1 className="text-3xl font-bold">{activeCard.title}</h1>
+                <h1 className="text-3xl font-bold mb-6">
+                  {activeCard.title}
+                </h1>
 
-                <p className="mt-4 text-white/70 max-w-xl">
-                  {activeCard.description}
-                </p>
+                {activeCard.component}
 
                 <div className="mt-6 text-sm text-white/50">
                   This is the expanded page content. You can render dashboards,
