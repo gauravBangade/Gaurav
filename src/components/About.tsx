@@ -14,12 +14,6 @@ export default function About() {
     return (
         <div className="relative mx-auto w-full max-w-2xl px-5 sm:px-6 md:px-4 lg:px-5 py-3 space-y-5 break-words">
 
-            {/* Toast */}
-            <Toast
-                message="Email copied to clipboard ✓"
-                show={showToast}
-                onClose={() => setShowToast(false)}
-            />
 
             {/* Psyduck sprite */}
             <div className="flex flex-col items-start gap-1">
@@ -82,6 +76,12 @@ export default function About() {
                     </span>.
                 </p>
             </div>
+            {/* Toast */}
+            <Toast
+                message="Email copied to clipboard ✓"
+                show={showToast}
+                onClose={() => setShowToast(false)}
+            />
         </div>
     );
 }
