@@ -1,14 +1,11 @@
-/* ================= EXPAND ================= */
 .card-expand {
   transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ================= SHRINK ================= */
 .card-shrink {
   transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ================= FADE CONTENT ================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -22,4 +19,24 @@
 
 .animate-fadeIn {
   animation: fadeIn 0.3s 0.15s forwards;
+}
+
+.openCard {
+  position: absolute;
+  background: #171717;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE + Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
 }
