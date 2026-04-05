@@ -20,12 +20,12 @@ type ModelEdge = {
   sourceHandle?: string;
 };
 
-const NODE_WIDTH = 300;
-const HEADER_HEIGHT = 30;
-const ROW_HEIGHT = 22;
-const NODE_MIN_HEIGHT = 64;
-const COLUMN_GAP = 420;
-const VERTICAL_GAP = 54;
+const NODE_WIDTH = 340;
+const HEADER_HEIGHT = 42;
+const ROW_HEIGHT = 30;
+const NODE_MIN_HEIGHT = 84;
+const COLUMN_GAP = 500;
+const VERTICAL_GAP = 90;
 const LEFT_PADDING = 28;
 const TOP_PADDING = 28;
 
@@ -40,7 +40,7 @@ function formatPrimitive(value: Primitive): string {
 }
 
 function computeNodeHeight(attributes: string[]): number {
-  return Math.max(NODE_MIN_HEIGHT, HEADER_HEIGHT + Math.max(attributes.length, 1) * ROW_HEIGHT + 10);
+  return Math.max(NODE_MIN_HEIGHT, HEADER_HEIGHT + Math.max(attributes.length, 1) * ROW_HEIGHT + 18);
 }
 
 function summaryForValue(value: unknown): string {
@@ -275,9 +275,9 @@ export function jsonToGraph(json: unknown): GraphData {
     sourceHandle: edge.sourceHandle ?? "out",
     targetHandle: "in",
     label: edge.label ?? "",
-    labelStyle: { fill: "#a1a1aa", fontSize: 10 },
+    labelStyle: { fill: "#6f7d70", fontSize: 12 },
     labelBgStyle: { fill: "transparent" },
-    style: { stroke: "#3f3f46", strokeWidth: 1.4 },
+    style: { stroke: "#769179", strokeWidth: 1.6 },
   }));
 
   return { nodes, edges };

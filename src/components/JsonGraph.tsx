@@ -84,6 +84,11 @@ export default function JsonGraph() {
     navigate("/");
   };
 
+  const copyJson = async () => {
+    if (!parsed) return;
+    await navigator.clipboard.writeText(JSON.stringify(parsed, null, 2));
+  };
+
   return (
     <section className="h-full w-full min-h-0 overflow-hidden bg-slate-950">
       <div className="flex h-full min-h-0 flex-col">
@@ -113,7 +118,13 @@ export default function JsonGraph() {
             </div>
 
             <div className="grid h-full min-h-0 grid-cols-1 grid-rows-[minmax(280px,44vh)_minmax(300px,1fr)] lg:grid-cols-[32%_68%] lg:grid-rows-1">
-              <JsonEditor value={jsonText} error={error} onChange={setJsonText} />
+              <JsonEditor
+                value={jsonText}
+                error={error}
+                onChange={setJsonText}
+                onCopy={copyJson}
+                canCopy={Boolean(parsed)}
+              />
               <div className="h-full min-h-0 bg-slate-900 p-3 sm:p-4 lg:p-5">
                 <div className="h-full min-h-0 overflow-hidden rounded-xl border border-slate-700/70 bg-slate-950 shadow-[inset_0_0_0_1px_rgba(15,23,42,0.5)]">
                   {graph.nodes.length > 0 ? (

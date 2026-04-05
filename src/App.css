@@ -57,10 +57,10 @@
 .json-toolkit-minimap {
   width: 180px !important;
   height: 112px !important;
-  border: 2px solid rgba(52, 211, 153, 0.6) !important;
+  border: 1px solid rgba(70, 106, 82, 0.3) !important;
   border-radius: 10px !important;
-  background: linear-gradient(180deg, rgba(5, 10, 8, 0.97) 0%, rgba(7, 16, 11, 0.96) 100%) !important;
-  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.62) !important;
+  background: rgba(250, 251, 245, 0.94) !important;
+  box-shadow: 0 10px 24px rgba(70, 106, 82, 0.12) !important;
   overflow: hidden !important;
 }
 
@@ -75,12 +75,12 @@
 }
 
 .json-toolkit-minimap .react-flow__minimap-mask {
-  fill: rgba(52, 211, 153, 0.12) !important;
+  fill: rgba(108, 139, 115, 0.12) !important;
 }
 
 .json-toolkit-minimap .react-flow__minimap-node {
-  fill: #2f855a !important;
-  stroke: #6ee7b7 !important;
+  fill: #8aa08f !important;
+  stroke: #5f7666 !important;
   stroke-width: 1.2px !important;
 }
 
@@ -92,20 +92,20 @@
 .json-toolkit-flow .react-flow__controls {
   right: 14px !important;
   top: 14px !important;
-  border: 1px solid rgba(82, 82, 91, 0.95) !important;
+  border: 1px solid rgba(70, 106, 82, 0.18) !important;
   border-radius: 10px !important;
-  background: rgba(9, 9, 11, 0.92) !important;
+  background: rgba(252, 250, 245, 0.96) !important;
   backdrop-filter: blur(6px) !important;
-  box-shadow: 0 12px 26px rgba(2, 6, 23, 0.45) !important;
+  box-shadow: 0 10px 24px rgba(70, 106, 82, 0.1) !important;
   overflow: hidden !important;
 }
 
 .json-toolkit-flow .react-flow__controls-button {
   width: 34px !important;
   height: 34px !important;
-  border-bottom: 1px solid rgba(63, 63, 70, 0.95) !important;
-  background: rgba(9, 9, 11, 0.95) !important;
-  color: #f4f4f5 !important;
+  border-bottom: 1px solid rgba(70, 106, 82, 0.14) !important;
+  background: rgba(252, 250, 245, 0.96) !important;
+  color: #45654b !important;
 }
 
 .json-toolkit-flow .react-flow__controls-button:last-child {
@@ -115,16 +115,27 @@
 .json-toolkit-flow .react-flow__controls-button svg {
   width: 16px !important;
   height: 16px !important;
-  fill: #f4f4f5 !important;
+  fill: #45654b !important;
 }
 
 .json-toolkit-flow .react-flow__controls-button:hover {
-  background: #14532d !important;
+  background: #e4eee4 !important;
 }
 
 .json-toolkit-flow .react-flow__controls-button:focus-visible {
-  outline: 2px solid #86efac !important;
+  outline: 2px solid #8aa08f !important;
   outline-offset: -2px !important;
+}
+
+.json-toolkit-graph-paper {
+  background-color: #f5f8f0;
+  background-image:
+    linear-gradient(rgba(108, 139, 115, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108, 139, 115, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(70, 106, 82, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(70, 106, 82, 0.14) 1px, transparent 1px);
+  background-size: 26px 26px, 26px 26px, 130px 130px, 130px 130px;
+  background-position: 0 0, 0 0, -1px -1px, -1px -1px;
 }
 
 .json-toolbar-shell {
