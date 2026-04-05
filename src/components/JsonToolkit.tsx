@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GraphCanvas from "./GraphCanvas";
 import JsonEditor from "./JsonEditor";
@@ -103,6 +103,9 @@ export default function JsonToolkit() {
   const [sortKeys, setSortKeys] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [leftPaneWidth, setLeftPaneWidth] = useState(32);
+  const [isResizing, setIsResizing] = useState(false);
+  const desktopSplitRef = useRef<HTMLDivElement | null>(null);
 
   const { parsed, error } = useMemo(() => parseJson(jsonText), [jsonText]);
 
@@ -180,71 +183,90 @@ export default function JsonToolkit() {
     setJsonText(INITIAL_JSON);
   };
 
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const container = desktopSplitRef.current;
+      if (!container) return;
+
+      const bounds = container.getBoundingClientRect();
+      const nextWidth = ((event.clientX - bounds.left) / bounds.width) * 100;
+      const clampedWidth = Math.min(60, Math.max(24, nextWidth));
+      setLeftPaneWidth(clampedWidth);
+    };
+
+    const stopResizing = () => {
+      setIsResizing(false);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", stopResizing);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", stopResizing);
+    };
+  }, [isResizing]);
+
   return (
-    <section className="h-full w-full min-h-0 overflow-hidden bg-slate-950">
+    <section className="json-toolkit-shell h-full w-full min-h-0 overflow-hidden bg-[#f8f5ef]">
       <div className="flex h-full min-h-0 flex-col">
-        <header className="border-b border-white/10 bg-slate-950/95 px-4 py-3 sm:px-6">
+        <header className="border-b border-black/10 bg-[#f8f5ef]/95 px-4 py-4 sm:px-6">
           <div>
             <h2
               onClick={handleBack}
-              className="cursor-pointer text-lg font-semibold text-white transition hover:text-emerald-300 sm:text-xl"
+              className="cursor-pointer text-lg font-semibold text-[#151515] transition hover:text-[#466a52] sm:text-xl"
             >
               JSON Toolkit
             </h2>
-            <p className="text-xs text-slate-400 sm:text-sm">Format, validate, and visualize JSON in one workspace.</p>
+            <p className="text-xs text-black/50 sm:text-sm">Format, validate, and visualize JSON in one workspace.</p>
           </div>
         </header>
 
         <div className="min-h-0 flex-1 px-4 py-4 sm:px-6 sm:py-5">
-          <div className="h-full min-h-0 overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-900/75 shadow-[0_24px_60px_rgba(2,6,23,0.7),0_0_0_1px_rgba(148,163,184,0.12)]">
-            <div className="border-b border-slate-700/80 bg-slate-900/90 px-3 py-1.5">
+          <div className="h-full min-h-0 overflow-hidden rounded-2xl border border-[#1a1a1a] bg-[#fdfbf6] shadow-none">
+            <div className="border-b border-black/10 bg-[#f4efe6] px-3 py-1.5">
               <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                <span className="ml-2 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">
-                  json-toolkit-terminal
+                <span className="h-2.5 w-2.5 rounded-full bg-[#d08672]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#c8a15b]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#6c8b73]" />
+                <span className="ml-2 text-[11px] font-medium uppercase tracking-[0.14em] text-black/45">
+                  graph notebook
                 </span>
               </div>
             </div>
 
-            <div className="border-b border-slate-800/90 bg-slate-900/85 px-2.5 py-2 sm:px-3">
+            <div className="border-b border-black/10 bg-[#f8f4ec] px-2.5 py-2 sm:px-3">
               <div className="mb-2 flex flex-wrap items-center gap-1.5">
                 <button
                   onClick={runPrettify}
-                  className="rounded-md bg-emerald-500/20 px-2.5 py-1 text-xs font-medium text-emerald-200 hover:bg-emerald-500/30"
+                  className="rounded-md border border-[#b7c9b8] bg-[#e4eee4] px-2.5 py-1 text-xs font-medium text-[#45654b] hover:bg-[#dce9dd]"
                 >
                   Prettify
                 </button>
                 <button
                   onClick={runMinify}
-                  className="rounded-md bg-sky-500/20 px-2.5 py-1 text-xs font-medium text-sky-200 hover:bg-sky-500/30"
+                  className="rounded-md border border-[#cdd7df] bg-[#ebf0f3] px-2.5 py-1 text-xs font-medium text-[#516672] hover:bg-[#e0e8ed]"
                 >
                   Minify
                 </button>
                 <button
-                  onClick={copyJson}
-                  disabled={!jsonText}
-                  className="rounded-md bg-white/10 px-2.5 py-1 text-xs font-medium text-slate-100 hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  Copy JSON
-                </button>
-                <button
                   onClick={downloadJson}
                   disabled={!jsonText}
-                  className="rounded-md bg-white/10 px-2.5 py-1 text-xs font-medium text-slate-100 hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-md border border-black/10 bg-white/70 px-2.5 py-1 text-xs font-medium text-black/75 hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Download JSON
                 </button>
                 <button
                   onClick={clearAll}
-                  className="rounded-md bg-rose-500/20 px-2.5 py-1 text-xs font-medium text-rose-200 hover:bg-rose-500/30"
+                  className="rounded-md border border-[#e0c1bd] bg-[#f7e9e6] px-2.5 py-1 text-xs font-medium text-[#905f57] hover:bg-[#f2dfdb]"
                 >
                   Reset
                 </button>
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-300">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-black/60">
                 <label className="flex items-center gap-1.5">
                   Indent
                   <select
@@ -257,7 +279,7 @@ export default function JsonToolkit() {
                       const nextValue = sortKeys ? sortObjectKeys(parsed) : parsed;
                       setJsonText(JSON.stringify(nextValue, null, nextIndent));
                     }}
-                    className="rounded-md border border-slate-700 bg-slate-950 px-1.5 py-0.5 text-xs text-slate-100"
+                    className="rounded-md border border-black/10 bg-white/80 px-1.5 py-0.5 text-xs text-black/80"
                   >
                     <option value={2}>2 spaces</option>
                     <option value={4}>4 spaces</option>
@@ -284,14 +306,64 @@ export default function JsonToolkit() {
               </div>
             </div>
 
-            <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-[minmax(260px,38vh)_minmax(360px,1fr)] lg:grid-cols-[32%_68%] lg:grid-rows-1">
-              <JsonEditor value={jsonText} error={error} onChange={setJsonText} />
-              <div className="h-full min-h-0 bg-slate-900 p-0">
-                <div className="h-full min-h-0 overflow-hidden border border-slate-700/70 bg-slate-950 shadow-[inset_0_0_0_1px_rgba(15,23,42,0.5)]">
+            <div className="min-h-0 flex-1 lg:hidden">
+              <div className="grid h-full min-h-0 grid-cols-1 grid-rows-[minmax(260px,38vh)_minmax(360px,1fr)]">
+                <JsonEditor
+                  value={jsonText}
+                  error={error}
+                  onChange={setJsonText}
+                  onCopy={copyJson}
+                  canCopy={Boolean(normalizedParsed)}
+                />
+                <div className="h-full min-h-0 bg-[#f4efe6] p-0">
+                  <div className="json-toolkit-graph-paper h-full min-h-0 overflow-hidden border-t border-black/10">
+                    {graph.nodes.length > 0 ? (
+                      <GraphCanvas nodes={graph.nodes} edges={graph.edges} />
+                    ) : (
+                      <div className="flex h-full items-center justify-center p-6 text-center text-sm text-[#5f7666]">
+                        Enter valid JSON in the left panel to render the graph.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              ref={desktopSplitRef}
+              className={`hidden min-h-0 flex-1 lg:flex ${isResizing ? "select-none" : ""}`}
+            >
+              <div className="min-h-0 shrink-0" style={{ width: `${leftPaneWidth}%` }}>
+                <JsonEditor
+                  value={jsonText}
+                  error={error}
+                  onChange={setJsonText}
+                  onCopy={copyJson}
+                  canCopy={Boolean(normalizedParsed)}
+                />
+              </div>
+
+              <button
+                type="button"
+                aria-label="Resize panels"
+                title="Drag to resize"
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  setIsResizing(true);
+                }}
+                onDoubleClick={() => setLeftPaneWidth(32)}
+                className="group relative z-10 w-3 shrink-0 cursor-col-resize border-x border-black/10 bg-[#f4efe6] transition hover:bg-[#ebe4d8]"
+              >
+                <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-[#c5bcaf]" />
+                <span className="absolute left-1/2 top-1/2 h-14 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#c5bcaf] transition group-hover:bg-[#95af98]" />
+              </button>
+
+              <div className="min-h-0 min-w-0 flex-1 bg-[#f4efe6] p-0">
+                <div className="json-toolkit-graph-paper h-full min-h-0 overflow-hidden">
                   {graph.nodes.length > 0 ? (
                     <GraphCanvas nodes={graph.nodes} edges={graph.edges} />
                   ) : (
-                    <div className="flex h-full items-center justify-center p-6 text-center text-sm text-slate-400">
+                    <div className="flex h-full items-center justify-center p-6 text-center text-sm text-[#5f7666]">
                       Enter valid JSON in the left panel to render the graph.
                     </div>
                   )}

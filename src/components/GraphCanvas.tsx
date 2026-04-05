@@ -20,10 +20,10 @@ type GraphCanvasProps = {
 };
 
 const kindClasses: Record<GraphNodeData["kind"], string> = {
-  root: "bg-[#2a2a2a] text-zinc-100 border-zinc-600",
-  collection: "bg-[#2f2f2f] text-zinc-100 border-zinc-600",
-  entity: "bg-[#2b2b2b] text-zinc-100 border-zinc-600",
-  value: "bg-[#262626] text-zinc-100 border-zinc-700",
+  root: "border-[#7a9a7f] bg-[#f9fcf6] text-[#1d2f22]",
+  collection: "border-[#95af98] bg-[#fbfdf8] text-[#1d2f22]",
+  entity: "border-[#87a68b] bg-[#f6faf3] text-[#1d2f22]",
+  value: "border-[#a6bda8] bg-[#fdfdf9] text-[#243429]",
 };
 
 const TableNode = memo(({ data }: NodeProps<GraphNodeData>) => {
@@ -38,18 +38,18 @@ const TableNode = memo(({ data }: NodeProps<GraphNodeData>) => {
 
     return (
       <span>
-        <span className="text-cyan-300">{key}:</span> {value}
+        <span className="text-[#466a52]">{key}:</span> {value}
       </span>
     );
   };
 
   return (
-    <div className={`min-w-[260px] max-w-[340px] rounded-lg border shadow-sm ${classes}`}>
+    <div className={`min-w-[280px] max-w-[360px] rounded-lg border bg-white/90 shadow-[0_8px_18px_rgba(77,106,83,0.08)] ${classes}`}>
       <Handle
         id="in"
         type="target"
         position={Position.Left}
-        className="!h-2 !w-2 !border !border-zinc-500 !bg-zinc-500/90"
+        className="!h-2 !w-2 !border !border-[#769179] !bg-[#769179]"
       />
       {sourceHandles.length > 0 &&
         sourceHandles.map((handleId, index) => (
@@ -59,16 +59,16 @@ const TableNode = memo(({ data }: NodeProps<GraphNodeData>) => {
             type="source"
             position={Position.Right}
             style={{ top: `${((index + 1) / (sourceHandles.length + 1)) * 100}%` }}
-            className="!h-2 !w-2 !border !border-zinc-500 !bg-zinc-500/90"
+            className="!h-2 !w-2 !border !border-[#769179] !bg-[#769179]"
           />
         ))}
-      <div className="border-b border-zinc-600 px-3 py-2 text-xs font-semibold tracking-wide text-cyan-300">{data.title}</div>
+      <div className="border-b border-[#b9cbb9] px-3 py-2.5 text-sm font-semibold tracking-wide text-[#466a52]">{data.title}</div>
       {data.attributes.length > 0 && (
-        <div className="px-3 py-2 text-[11px] leading-5">
+        <div className="px-3 py-2.5 text-[13px] leading-6">
           {data.attributes.map((attribute, index) => (
             <div
               key={`${data.title}-${index}`}
-              className="whitespace-pre-wrap break-all border-b border-zinc-700 py-1 last:border-none"
+              className="whitespace-pre-wrap break-all border-b border-[#d7e1d5] py-1.5 last:border-none"
             >
               {renderAttribute(attribute)}
             </div>
@@ -155,12 +155,12 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
         style: {
           ...edge.style,
           cursor: "pointer",
-          stroke: edge.id === hoveredEdgeId ? "#22c55e" : "#4b5563",
+          stroke: edge.id === hoveredEdgeId ? "#466a52" : "#769179",
           strokeWidth: edge.id === hoveredEdgeId ? 2.1 : 1.4,
         },
         labelStyle: {
           ...edge.labelStyle,
-          fill: edge.id === hoveredEdgeId ? "#86efac" : "#a1a1aa",
+          fill: edge.id === hoveredEdgeId ? "#466a52" : "#6f7d70",
         },
       })),
     [edges, hoveredEdgeId],
@@ -182,15 +182,15 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
   );
 
   return (
-    <section ref={containerRef} className="json-toolkit-graph-canvas h-full w-full min-h-0 min-w-0 bg-[#0b0c10]">
+    <section ref={containerRef} className="json-toolkit-graph-canvas h-full w-full min-h-0 min-w-0 bg-[#f5f8f0]">
       <ReactFlow
         nodes={nodes}
         edges={renderedEdges}
         nodeTypes={nodeTypes}
         className="json-toolkit-flow"
-        style={{ backgroundColor: "#0b0c10", width: "100%", height: "100%" }}
+        style={{ backgroundColor: "#f5f8f0", width: "100%", height: "100%" }}
         defaultEdgeOptions={{
-          style: { stroke: "#4b5563", strokeWidth: 1.4 },
+          style: { stroke: "#769179", strokeWidth: 1.4 },
         }}
         minZoom={0.12}
         maxZoom={1.6}
@@ -205,8 +205,8 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
           zoomable
           pannable
           position="top-left"
-          maskColor="rgba(52, 211, 153, 0.12)"
-          nodeColor={(node) => (node.data?.kind === "root" ? "#3f8c63" : "#2f855a")}
+          maskColor="rgba(108, 139, 115, 0.16)"
+          nodeColor={(node) => (node.data?.kind === "root" ? "#6c8b73" : "#8aa08f")}
         />
         <Controls
           position="top-right"
@@ -216,16 +216,16 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
         <Background
           id="minor-grid"
           variant={BackgroundVariant.Lines}
-          gap={28}
+          gap={26}
           size={1}
-          color="rgba(82, 82, 91, 0.25)"
+          color="rgba(108, 139, 115, 0.18)"
         />
         <Background
           id="major-grid"
           variant={BackgroundVariant.Lines}
-          gap={140}
+          gap={130}
           size={1.2}
-          color="rgba(113, 113, 122, 0.3)"
+          color="rgba(70, 106, 82, 0.28)"
         />
       </ReactFlow>
     </section>

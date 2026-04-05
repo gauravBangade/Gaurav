@@ -12,7 +12,7 @@ export default function About() {
     };
 
     return (
-        <div className="relative mx-auto w-full max-w-2xl px-5 sm:px-6 md:px-4 lg:px-5 py-3 space-y-5 break-words">
+        <div className="relative mx-auto w-full max-w-2xl space-y-5 break-words px-5 py-3 text-[#1b1b1b] sm:px-6 md:px-4 lg:px-5">
 
 
             {/* Psyduck sprite */}
@@ -24,32 +24,32 @@ export default function About() {
                     draggable="false"
                 />
 
-                <h2 className="sm:text-2xl font-semibold leading-tight">
+                <h2 className="font-semibold leading-tight sm:text-2xl">
                     Hey, I’m Gaurav.
                 </h2>
             </div>
 
-            <p className="text-white/80 leading-relaxed text-sm sm:text-base">
+            <p className="text-sm leading-relaxed text-black/80 sm:text-base">
                 I build web applications with React and TypeScript that are fast,
                 reliable, and thoughtfully designed.
             </p>
 
-            <p className="text-white/70 leading-relaxed text-sm sm:text-base">
+            <p className="text-sm leading-relaxed text-black/70 sm:text-base">
                 Most of my current work is at Ecosail Infotech, where I help design,
                 build, and maintain core product features across the frontend.
             </p>
 
-            <p className="text-white/70 leading-relaxed text-sm sm:text-base">
+            <p className="text-sm leading-relaxed text-black/70 sm:text-base">
                 Outside of work, I build tools, small applications, and experiments.
             </p>
 
-            <div className="pt-4 text-white/60 space-y-2 text-sm sm:text-base">
+            <div className="space-y-2 pt-4 text-sm text-black/60 sm:text-base">
                 <p>
                     You can find most of my work on{" "}
                     <a
                         href="https://github.com/gauravBangade"
                         target="_blank"
-                        className="underline underline-offset-4 hover:text-white transition break-all"
+                        className="break-all underline underline-offset-4 transition hover:text-black"
                     >
                         GitHub
                     </a>.
@@ -60,7 +60,7 @@ export default function About() {
                     <a
                         href="https://www.linkedin.com/in/gaurav-bangade-9a2430222/"
                         target="_blank"
-                        className="underline underline-offset-4 hover:text-white transition break-all"
+                        className="break-all underline underline-offset-4 transition hover:text-black"
                     >
                         LinkedIn
                     </a>{" "}
@@ -69,7 +69,7 @@ export default function About() {
                         {/* mailto link */}
                         <a
                             onClick={copyEmail}
-                            className="underline underline-offset-4 hover:text-white transition"
+                            className="underline underline-offset-4 transition hover:text-black"
                         >
                             email
                         </a>
