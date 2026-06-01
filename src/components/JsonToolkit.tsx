@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GraphCanvas from "./GraphCanvas";
 import JsonEditor from "./JsonEditor";
@@ -96,6 +96,20 @@ function parseJson(value: string): ParseResult {
   }
 }
 
+function useDebouncedValue<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => window.clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 export default function JsonToolkit() {
   const navigate = useNavigate();
   const [jsonText, setJsonText] = useState<string>(INITIAL_JSON);
@@ -108,6 +122,7 @@ export default function JsonToolkit() {
   const desktopSplitRef = useRef<HTMLDivElement | null>(null);
 
   const { parsed, error } = useMemo(() => parseJson(jsonText), [jsonText]);
+  const debouncedParsed = useDebouncedValue(parsed, 250);
 
   const inputStats = useMemo(() => {
     const size = new Blob([jsonText]).size;
@@ -119,11 +134,11 @@ export default function JsonToolkit() {
   }, [jsonText]);
 
   const graph: GraphData = useMemo(() => {
-    if (!parsed) {
+    if (!debouncedParsed) {
       return { nodes: [], edges: [] };
     }
-    return jsonToGraph(parsed);
-  }, [parsed]);
+    return jsonToGraph(debouncedParsed);
+  }, [debouncedParsed]);
 
   const normalizedParsed = useMemo(() => {
     if (!parsed) return null;
@@ -137,6 +152,15 @@ export default function JsonToolkit() {
     }
     navigate("/");
   };
+
+  const showMessage = useCallback((message: string) => {
+    setToastMessage(message);
+    setShowToast(true);
+  }, []);
+
+  const handleToastClose = useCallback(() => {
+    setShowToast(false);
+  }, []);
 
   const runPrettify = () => {
     if (!normalizedParsed) {
@@ -159,16 +183,17 @@ export default function JsonToolkit() {
 
     try {
       await navigator.clipboard.writeText(formatted);
-      setToastMessage("JSON formatted and copied.");
-      setShowToast(true);
+      showMessage("JSON formatted and copied.");
     } catch {
-      setToastMessage("Copy failed. Please check clipboard permissions.");
-      setShowToast(true);
+      showMessage("Copy failed. Please check clipboard permissions.");
     }
   };
 
   const downloadJson = () => {
-    if (!normalizedParsed) return;
+    if (!normalizedParsed) {
+      showMessage("Fix the JSON before downloading.");
+      return;
+    }
     const formatted = JSON.stringify(normalizedParsed, null, indent);
     const blob = new Blob([formatted], { type: "application/json;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -214,12 +239,13 @@ export default function JsonToolkit() {
       <div className="flex h-full min-h-0 flex-col">
         <header className="border-b border-black/10 bg-[#f8f5ef]/95 px-4 py-4 sm:px-6">
           <div>
-            <h2
+            <button
+              type="button"
               onClick={handleBack}
-              className="cursor-pointer text-lg font-semibold text-[#151515] transition hover:text-[#466a52] sm:text-xl"
+              className="cursor-pointer text-left text-lg font-semibold text-[#151515] transition hover:text-[#466a52] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#466a52] sm:text-xl"
             >
               JSON Toolkit
-            </h2>
+            </button>
             <p className="text-xs text-black/50 sm:text-sm">Format, validate, and visualize JSON in one workspace.</p>
           </div>
         </header>
@@ -253,7 +279,7 @@ export default function JsonToolkit() {
                 </button>
                 <button
                   onClick={downloadJson}
-                  disabled={!jsonText}
+                  disabled={!normalizedParsed}
                   className="rounded-md border border-black/10 bg-white/70 px-2.5 py-1 text-xs font-medium text-black/75 hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Download JSON
@@ -373,7 +399,7 @@ export default function JsonToolkit() {
           </div>
         </div>
       </div>
-      <Toast message={toastMessage} show={showToast} onClose={() => setShowToast(false)} />
+      <Toast message={toastMessage} show={showToast} onClose={handleToastClose} />
     </section>
   );
 }

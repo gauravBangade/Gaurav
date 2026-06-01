@@ -12,12 +12,7 @@ type Card = {
   path: string;
   component: React.ReactNode;
   label: string;
-  image: string;
   logo: string;
-  cardClassName: string;
-  imageWrapClassName: string;
-  overlayClassName: string;
-  titleClassName: string;
 };
 
 const CARDS: Card[] = [
@@ -28,13 +23,7 @@ const CARDS: Card[] = [
     path: "/about",
     component: <About />,
     label: "Profile",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Profile_Icon.png",
     logo: "https://commons.wikimedia.org/wiki/Special:FilePath/GitHub_Mark.png",
-    cardClassName:
-      "border-sky-300/30 bg-[#08101b] shadow-sky-500/20 hover:border-sky-200/40",
-    imageWrapClassName: "border-sky-300/20 bg-sky-950/40",
-    overlayClassName: "from-sky-400/10 via-blue-900/35 to-slate-950/80",
-    titleClassName: "text-cyan-100",
   },
   {
     id: 2,
@@ -43,14 +32,7 @@ const CARDS: Card[] = [
     path: "/education",
     component: <Education />,
     label: "Journey",
-    image:
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Graduation-cap-g6c3c0e4d0_1920.jpg",
     logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Graduation_cap.png",
-    cardClassName:
-      "border-amber-300/35 bg-[#1a1204] shadow-amber-500/20 hover:border-amber-200/45",
-    imageWrapClassName: "border-amber-300/25 bg-amber-950/45",
-    overlayClassName: "from-yellow-300/15 via-orange-900/40 to-zinc-950/80",
-    titleClassName: "text-amber-100",
   },
   {
     id: 3,
@@ -59,13 +41,7 @@ const CARDS: Card[] = [
     path: "/json-toolkit",
     component: <JsonToolkit />,
     label: "Toolkit",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Colorful_Chart_Icon_vol2.png",
     logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Network_icon_from_Noun_Project.png",
-    cardClassName:
-      "border-violet-300/35 bg-[#110b1a] shadow-violet-500/20 hover:border-violet-200/40",
-    imageWrapClassName: "border-violet-300/25 bg-violet-950/45",
-    overlayClassName: "from-fuchsia-300/10 via-violet-900/45 to-slate-950/80",
-    titleClassName: "text-fuchsia-100",
   },
 ];
 
@@ -106,9 +82,12 @@ export default function App() {
   const [rect, setRect] = useState<Rect | null>(null);
   const [isClosing, setIsClosing] = useState(false);
 
-  const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const cardRefs = useRef<Record<number, HTMLButtonElement | null>>({});
   const activeCardRef = useRef<Card | null>(null);
   const startRectRef = useRef<Rect | null>(null);
+  const openFrameRef = useRef<number | null>(null);
+  const navigateTimerRef = useRef<number | null>(null);
+  const closeTimerRef = useRef<number | null>(null);
   const isFullscreenCardActive = activeCard?.path === "/json-toolkit";
 
   const getAccent = (card: Card) => {
@@ -148,6 +127,20 @@ export default function App() {
   useEffect(() => {
     startRectRef.current = startRect;
   }, [startRect]);
+
+  useEffect(() => {
+    return () => {
+      if (openFrameRef.current !== null) {
+        window.cancelAnimationFrame(openFrameRef.current);
+      }
+      if (navigateTimerRef.current !== null) {
+        window.clearTimeout(navigateTimerRef.current);
+      }
+      if (closeTimerRef.current !== null) {
+        window.clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const card = CARDS.find((c) => c.path === location.pathname);
@@ -246,7 +239,14 @@ export default function App() {
     setRect(initialRect);
     setActiveCard(card);
 
-    requestAnimationFrame(() => {
+    if (openFrameRef.current !== null) {
+      window.cancelAnimationFrame(openFrameRef.current);
+    }
+    if (navigateTimerRef.current !== null) {
+      window.clearTimeout(navigateTimerRef.current);
+    }
+
+    openFrameRef.current = requestAnimationFrame(() => {
       setRect({
         top: 0,
         left: 0,
@@ -255,7 +255,7 @@ export default function App() {
       });
     });
 
-    setTimeout(() => {
+    navigateTimerRef.current = window.setTimeout(() => {
       navigate(card.path);
     }, 10);
   };
@@ -269,7 +269,11 @@ export default function App() {
     setIsClosing(true);
     setRect(startRect);
 
-    setTimeout(() => {
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+    }
+
+    closeTimerRef.current = window.setTimeout(() => {
       setActiveCard(null);
       setRect(null);
       setIsClosing(false);
@@ -306,7 +310,8 @@ export default function App() {
               "
             >
               {CARDS.map((card) => (
-                <div
+                <button
+                  type="button"
                   key={card.id}
                   ref={(el) => {
                     cardRefs.current[card.id] = el;
@@ -325,10 +330,16 @@ export default function App() {
                 bg-[#fdfbf6]
                 shadow-none
                 hover:-translate-y-0.5
+                text-left
+                focus:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-[#466a52]
+                focus-visible:ring-offset-2
+                focus-visible:ring-offset-[#f8f5ef]
               `}
                 >
                   {renderCardPreview(card)}
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -370,11 +381,11 @@ export default function App() {
                   <div className="h-full w-full">{activeCard.component}</div>
                 ) : (
                   <>
-                    <div onClick={closeCard} className="cursor-pointer text-center">
+                    <button type="button" onClick={closeCard} className="mx-auto block cursor-pointer text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#466a52]">
                       <h1 className="text-xl font-semibold transition hover:opacity-80 sm:text-2xl">Gaurav</h1>
 
                       <p className="text-xs text-black/45 sm:text-sm">Me and the things I’ve built.</p>
-                    </div>
+                    </button>
 
                     <div className="w-full min-w-0">{activeCard.component}</div>
                   </>
