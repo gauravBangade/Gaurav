@@ -28,6 +28,10 @@ const COLUMN_GAP = 500;
 const VERTICAL_GAP = 90;
 const LEFT_PADDING = 28;
 const TOP_PADDING = 28;
+const MAX_GRAPH_NODES = 350;
+const MAX_GRAPH_DEPTH = 24;
+const MAX_ATTRIBUTES_PER_NODE = 80;
+const MAX_PRIMITIVE_ARRAY_ITEMS = 40;
 
 function isPrimitive(value: unknown): value is Primitive {
   return value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean";
@@ -60,6 +64,7 @@ export function jsonToGraph(json: unknown): GraphData {
   const modelEdges: ModelEdge[] = [];
   let nodeIdCounter = 1;
   let edgeIdCounter = 1;
+  let limitNodeId: string | null = null;
 
   const nextNodeId = () => `node-${nodeIdCounter++}`;
   const nextEdgeId = () => `edge-${edgeIdCounter++}`;
@@ -76,6 +81,18 @@ export function jsonToGraph(json: unknown): GraphData {
     return id;
   };
 
+  const getLimitNode = (reason: string): string => {
+    if (limitNodeId) return limitNodeId;
+
+    limitNodeId = addModelNode("Graph limit reached", "value", [
+      reason,
+      "Try a smaller JSON sample or collapse the source data before visualizing.",
+    ]);
+    return limitNodeId;
+  };
+
+  const canCreateGraphNode = () => modelNodes.size < MAX_GRAPH_NODES;
+
   const addModelEdge = (from: string, to: string, label?: string) => {
     modelEdges.push({
       id: nextEdgeId(),
@@ -85,11 +102,20 @@ export function jsonToGraph(json: unknown): GraphData {
     });
   };
 
-  const buildObjectNode = (title: string, input: Record<string, unknown>): string => {
+  const buildObjectNode = (title: string, input: Record<string, unknown>, depth: number): string => {
+    if (depth > MAX_GRAPH_DEPTH) {
+      return getLimitNode(`Depth limit of ${MAX_GRAPH_DEPTH} levels reached.`);
+    }
+    if (!canCreateGraphNode()) {
+      return getLimitNode(`Node limit of ${MAX_GRAPH_NODES} reached.`);
+    }
+
     const attributes: string[] = [];
     const deferredChildren: Array<{ key: string; value: unknown }> = [];
 
-    Object.entries(input).forEach(([key, value]) => {
+    const entries = Object.entries(input);
+
+    entries.slice(0, MAX_ATTRIBUTES_PER_NODE).forEach(([key, value]) => {
       if (isPrimitive(value)) {
         attributes.push(`${key}: ${formatPrimitive(value)}`);
         return;
@@ -97,8 +123,9 @@ export function jsonToGraph(json: unknown): GraphData {
 
       if (Array.isArray(value)) {
         if (value.every(isPrimitive)) {
-          const printable = value.map(item => formatPrimitive(item)).join(", ");
-          attributes.push(`${key}: [${printable}]`);
+          const printable = value.slice(0, MAX_PRIMITIVE_ARRAY_ITEMS).map(item => formatPrimitive(item)).join(", ");
+          const suffix = value.length > MAX_PRIMITIVE_ARRAY_ITEMS ? ", ..." : "";
+          attributes.push(`${key}: [${printable}${suffix}]`);
         } else {
           attributes.push(`${key}: [${value.length} items]`);
           deferredChildren.push({ key, value });
@@ -110,41 +137,70 @@ export function jsonToGraph(json: unknown): GraphData {
       deferredChildren.push({ key, value });
     });
 
+    if (entries.length > MAX_ATTRIBUTES_PER_NODE) {
+      attributes.push(`...: ${entries.length - MAX_ATTRIBUTES_PER_NODE} more keys`);
+    }
+
     const nodeId = addModelNode(title, "entity", attributes);
 
-    deferredChildren.forEach(({ key, value }) => {
-      const childId = buildValueNode(key, value);
+    for (const { key, value } of deferredChildren) {
+      if (!canCreateGraphNode()) {
+        const childId = getLimitNode(`Node limit of ${MAX_GRAPH_NODES} reached.`);
+        addModelEdge(nodeId, childId, "more");
+        break;
+      }
+      const childId = buildValueNode(key, value, depth + 1);
       addModelEdge(nodeId, childId, key);
-    });
+    }
 
     return nodeId;
   };
 
-  const buildArrayNode = (key: string, values: unknown[]): string => {
+  const buildArrayNode = (key: string, values: unknown[], depth: number): string => {
+    if (depth > MAX_GRAPH_DEPTH) {
+      return getLimitNode(`Depth limit of ${MAX_GRAPH_DEPTH} levels reached.`);
+    }
+    if (!canCreateGraphNode()) {
+      return getLimitNode(`Node limit of ${MAX_GRAPH_NODES} reached.`);
+    }
+
     const nodeId = addModelNode(`${key}: [${values.length} items]`, "collection", []);
 
-    values.forEach((item, index) => {
-      if (item && typeof item === "object" && !Array.isArray(item)) {
-        const title = deriveEntityTitle(key, item as Record<string, unknown>, index);
-        const childId = buildObjectNode(title, item as Record<string, unknown>);
-        addModelEdge(nodeId, childId, title);
-        return;
+    for (const [index, item] of values.entries()) {
+      if (!canCreateGraphNode()) {
+        const childId = getLimitNode(`Node limit of ${MAX_GRAPH_NODES} reached.`);
+        addModelEdge(nodeId, childId, "more");
+        break;
       }
 
-      const childId = buildValueNode(`[${index}]`, item);
+      if (item && typeof item === "object" && !Array.isArray(item)) {
+        const title = deriveEntityTitle(key, item as Record<string, unknown>, index);
+        const childId = buildObjectNode(title, item as Record<string, unknown>, depth + 1);
+        addModelEdge(nodeId, childId, title);
+        continue;
+      }
+
+      const childId = buildValueNode(`[${index}]`, item, depth + 1);
       addModelEdge(nodeId, childId, `[${index}]`);
-    });
+    }
 
     return nodeId;
   };
 
-  const buildValueNode = (key: string, value: unknown): string => {
+  const buildValueNode = (key: string, value: unknown, depth = 0): string => {
+    if (depth > MAX_GRAPH_DEPTH) {
+      return getLimitNode(`Depth limit of ${MAX_GRAPH_DEPTH} levels reached.`);
+    }
+    if (!canCreateGraphNode()) {
+      return getLimitNode(`Node limit of ${MAX_GRAPH_NODES} reached.`);
+    }
+
     if (Array.isArray(value)) {
-      return buildArrayNode(key, value);
+      return buildArrayNode(key, value, depth);
     }
 
     if (value && typeof value === "object") {
-      return buildObjectNode(key, value as Record<string, unknown>);
+      return buildObjectNode(key, value as Record<string, unknown>, depth);
     }
 
     return addModelNode(key, "value", [`value: ${formatPrimitive(value as Primitive)}`]);
@@ -159,10 +215,15 @@ export function jsonToGraph(json: unknown): GraphData {
       const valueId = addModelNode("value", "value", ["value: {}"]);
       addModelEdge(rootNodeId, valueId, "value");
     } else {
-      entries.forEach(([key, value]) => {
+      for (const [key, value] of entries) {
+        if (!canCreateGraphNode()) {
+          const childId = getLimitNode(`Node limit of ${MAX_GRAPH_NODES} reached.`);
+          addModelEdge(rootNodeId, childId, "more");
+          break;
+        }
         const childId = buildValueNode(key, value);
         addModelEdge(rootNodeId, childId, key);
-      });
+      }
     }
   } else {
     const valueId = buildValueNode("value", json);

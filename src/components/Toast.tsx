@@ -17,19 +17,23 @@ export default function Toast({
 
     useEffect(() => {
         if (!show) return;
+        let closeTimer: number | null = null;
 
-        const mountTimer = setTimeout(() => {
+        const mountTimer = window.setTimeout(() => {
             setVisible(true);
         }, 0);
 
-        const timer = setTimeout(() => {
+        const timer = window.setTimeout(() => {
             setVisible(false);
-            setTimeout(onClose, 300);
+            closeTimer = window.setTimeout(onClose, 300);
         }, duration);
 
         return () => {
-            clearTimeout(mountTimer);
-            clearTimeout(timer);
+            window.clearTimeout(mountTimer);
+            window.clearTimeout(timer);
+            if (closeTimer !== null) {
+                window.clearTimeout(closeTimer);
+            }
         };
     }, [show, duration, onClose]);
 
