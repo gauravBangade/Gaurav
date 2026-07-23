@@ -40,10 +40,10 @@ export default function JsonEditor({ value, error, onChange, onCopy, canCopy }: 
         <div
           ref={gutterRef}
           onWheel={handleGutterWheel}
-          className="scrollbar-hide h-full w-14 overflow-y-auto border-r border-black/10 bg-[#f4efe6] py-4 text-right font-mono text-xs leading-6 text-black/35 [scrollbar-width:none] [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0"
+          className="scrollbar-hide h-full w-11 overflow-y-auto border-r border-black/10 bg-[#f4efe6] py-3 text-right font-mono text-[11px] leading-6 text-black/35 [scrollbar-width:none] [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0 sm:w-14 sm:py-4 sm:text-xs"
         >
           {lineNumbers.map((line) => (
-            <div key={line} className="pr-3">
+            <div key={line} className="pr-2 sm:pr-3">
               {line}
             </div>
           ))}
@@ -55,7 +55,7 @@ export default function JsonEditor({ value, error, onChange, onCopy, canCopy }: 
           disabled={!canCopy}
           aria-label="Copy JSON"
           title="Copy JSON"
-          className="absolute right-3 top-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#b7c9b8] bg-[#eef5ec]/95 text-[#45654b] shadow-sm transition hover:bg-[#e4eee4] disabled:cursor-not-allowed disabled:opacity-40"
+          className="absolute right-2 top-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#b7c9b8] bg-[#eef5ec]/95 text-[#45654b] shadow-sm transition hover:bg-[#e4eee4] disabled:cursor-not-allowed disabled:opacity-40 sm:right-3 sm:top-3 sm:h-9 sm:w-9"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <rect x="9" y="9" width="10" height="10" rx="2" />
@@ -72,11 +72,11 @@ export default function JsonEditor({ value, error, onChange, onCopy, canCopy }: 
           placeholder='{
   "fruits": []
 }'
-          className="h-full min-h-0 flex-1 resize-none overflow-y-auto overflow-x-auto overscroll-contain bg-[#fcfaf5] p-4 pr-14 font-mono text-sm leading-6 text-[#1e2d22] outline-none [scrollbar-width:none] [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0"
+          className="h-full min-h-0 flex-1 resize-none overflow-y-auto overflow-x-auto overscroll-contain bg-[#fcfaf5] p-3 pr-12 font-mono text-[13px] leading-6 text-[#1e2d22] outline-none [scrollbar-width:none] [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0 sm:p-4 sm:pr-14 sm:text-sm"
         />
       </div>
 
-      <div className="border-t border-black/10 bg-[#fcfaf5] px-4 py-2.5 text-sm">
+      <div className="shrink-0 border-t border-black/10 bg-[#fcfaf5] px-3 py-2 text-sm sm:px-4 sm:py-2.5">
         {error ? (
           <p className="text-xs text-[#905f57]">{error}</p>
         ) : (

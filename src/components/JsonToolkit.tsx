@@ -119,6 +119,7 @@ export default function JsonToolkit() {
   const [toastMessage, setToastMessage] = useState("");
   const [leftPaneWidth, setLeftPaneWidth] = useState(32);
   const [isResizing, setIsResizing] = useState(false);
+  const [mobileView, setMobileView] = useState<"editor" | "graph">("editor");
   const desktopSplitRef = useRef<HTMLDivElement | null>(null);
 
   const { parsed, error } = useMemo(() => parseJson(jsonText), [jsonText]);
@@ -237,8 +238,9 @@ export default function JsonToolkit() {
   return (
     <section className="json-toolkit-shell h-full w-full min-h-0 overflow-hidden bg-[#f8f5ef]">
       <div className="flex h-full min-h-0 flex-col">
-        <header className="border-b border-black/10 bg-[#f8f5ef]/95 px-4 py-4 sm:px-6">
-          <div>
+        <header className="shrink-0 border-b border-black/10 bg-[#f8f5ef]/95 px-3 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0">
             <button
               type="button"
               onClick={handleBack}
@@ -246,13 +248,34 @@ export default function JsonToolkit() {
             >
               JSON Toolkit
             </button>
-            <p className="text-xs text-black/50 sm:text-sm">Format, validate, and visualize JSON in one workspace.</p>
+              <p className="truncate text-xs text-black/50 sm:text-sm">Format, validate, and visualize JSON in one workspace.</p>
+            </div>
+            <div className="flex shrink-0 rounded-lg border border-black/10 bg-white/70 p-0.5 text-xs font-medium lg:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileView("editor")}
+                className={`rounded-md px-2.5 py-1.5 transition ${
+                  mobileView === "editor" ? "bg-[#45654b] text-white" : "text-black/60 hover:bg-black/5"
+                }`}
+              >
+                Editor
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileView("graph")}
+                className={`rounded-md px-2.5 py-1.5 transition ${
+                  mobileView === "graph" ? "bg-[#45654b] text-white" : "text-black/60 hover:bg-black/5"
+                }`}
+              >
+                Graph
+              </button>
+            </div>
           </div>
         </header>
 
-        <div className="min-h-0 flex-1 px-4 py-4 sm:px-6 sm:py-5">
-          <div className="h-full min-h-0 overflow-hidden rounded-2xl border border-[#1a1a1a] bg-[#fdfbf6] shadow-none">
-            <div className="border-b border-black/10 bg-[#f4efe6] px-3 py-1.5">
+        <div className="min-h-0 flex-1 px-2.5 py-2.5 sm:px-6 sm:py-5">
+          <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-[#1a1a1a] bg-[#fdfbf6] shadow-none sm:rounded-2xl">
+            <div className="hidden border-b border-black/10 bg-[#f4efe6] px-3 py-1.5 sm:block">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#d08672]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#c8a15b]" />
@@ -263,37 +286,37 @@ export default function JsonToolkit() {
               </div>
             </div>
 
-            <div className="border-b border-black/10 bg-[#f8f4ec] px-2.5 py-2 sm:px-3">
-              <div className="mb-2 flex flex-wrap items-center gap-1.5">
+            <div className="shrink-0 border-b border-black/10 bg-[#f8f4ec] px-2 py-2 sm:px-3">
+              <div className="mb-2 flex snap-x items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible sm:pb-0">
                 <button
                   onClick={runPrettify}
-                  className="rounded-md border border-[#b7c9b8] bg-[#e4eee4] px-2.5 py-1 text-xs font-medium text-[#45654b] hover:bg-[#dce9dd]"
+                  className="shrink-0 snap-start rounded-md border border-[#b7c9b8] bg-[#e4eee4] px-2.5 py-1.5 text-xs font-medium text-[#45654b] hover:bg-[#dce9dd] sm:py-1"
                 >
                   Prettify
                 </button>
                 <button
                   onClick={runMinify}
-                  className="rounded-md border border-[#cdd7df] bg-[#ebf0f3] px-2.5 py-1 text-xs font-medium text-[#516672] hover:bg-[#e0e8ed]"
+                  className="shrink-0 snap-start rounded-md border border-[#cdd7df] bg-[#ebf0f3] px-2.5 py-1.5 text-xs font-medium text-[#516672] hover:bg-[#e0e8ed] sm:py-1"
                 >
                   Minify
                 </button>
                 <button
                   onClick={downloadJson}
                   disabled={!normalizedParsed}
-                  className="rounded-md border border-black/10 bg-white/70 px-2.5 py-1 text-xs font-medium text-black/75 hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                  className="shrink-0 snap-start rounded-md border border-black/10 bg-white/70 px-2.5 py-1.5 text-xs font-medium text-black/75 hover:bg-white disabled:cursor-not-allowed disabled:opacity-40 sm:py-1"
                 >
                   Download JSON
                 </button>
                 <button
                   onClick={clearAll}
-                  className="rounded-md border border-[#e0c1bd] bg-[#f7e9e6] px-2.5 py-1 text-xs font-medium text-[#905f57] hover:bg-[#f2dfdb]"
+                  className="shrink-0 snap-start rounded-md border border-[#e0c1bd] bg-[#f7e9e6] px-2.5 py-1.5 text-xs font-medium text-[#905f57] hover:bg-[#f2dfdb] sm:py-1"
                 >
                   Reset
                 </button>
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-black/60">
-                <label className="flex items-center gap-1.5">
+              <div className="grid grid-cols-2 items-center gap-1.5 text-xs text-black/60 sm:flex sm:flex-wrap sm:gap-x-3">
+                <label className="flex min-w-0 items-center gap-1.5">
                   Indent
                   <select
                     value={indent}
@@ -326,21 +349,24 @@ export default function JsonToolkit() {
                   />
                   Sort keys
                 </label>
-                <span>
+                <span className="col-span-2 truncate sm:col-span-1">
                   Input: {inputStats.chars} chars | {inputStats.lines} lines | {inputStats.bytes} bytes
                 </span>
               </div>
             </div>
 
             <div className="min-h-0 flex-1 lg:hidden">
-              <div className="grid h-full min-h-0 grid-cols-1 grid-rows-[minmax(260px,38vh)_minmax(360px,1fr)]">
-                <JsonEditor
-                  value={jsonText}
-                  error={error}
-                  onChange={setJsonText}
-                  onCopy={copyJson}
-                  canCopy={Boolean(normalizedParsed)}
-                />
+              {mobileView === "editor" ? (
+                <div className="h-full min-h-0">
+                  <JsonEditor
+                    value={jsonText}
+                    error={error}
+                    onChange={setJsonText}
+                    onCopy={copyJson}
+                    canCopy={Boolean(normalizedParsed)}
+                  />
+                </div>
+              ) : (
                 <div className="h-full min-h-0 bg-[#f4efe6] p-0">
                   <div className="json-toolkit-graph-paper h-full min-h-0 overflow-hidden border-t border-black/10">
                     {graph.nodes.length > 0 ? (
@@ -352,7 +378,7 @@ export default function JsonToolkit() {
                     )}
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div
