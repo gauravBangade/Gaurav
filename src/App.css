@@ -256,3 +256,41 @@
     justify-content: flex-start;
   }
 }
+
+@media (max-width: 640px) {
+  .json-toolkit-shell {
+    height: 100dvh;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .json-toolkit-flow .react-flow__minimap-panel {
+    left: 8px !important;
+    top: 8px !important;
+  }
+
+  .json-toolkit-minimap {
+    width: 116px !important;
+    height: 72px !important;
+    border-radius: 8px !important;
+  }
+
+  .json-toolkit-flow .react-flow__controls {
+    right: 8px !important;
+    top: 8px !important;
+    border-radius: 8px !important;
+  }
+
+  .json-toolkit-flow .react-flow__controls-button {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .json-toolkit-flow .react-flow__controls-button svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .json-toolkit-graph-paper {
+    background-size: 22px 22px, 22px 22px, 110px 110px, 110px 110px;
+  }
+}
