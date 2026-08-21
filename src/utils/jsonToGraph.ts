@@ -312,7 +312,7 @@ export function jsonToGraph(json: unknown): GraphData {
     rootCursor += subtreeHeight;
   });
 
-  const nodes: GraphNode[] = Array.from(modelNodes.values()).map(node => {
+  const nodes: GraphNode[] = Array.from(modelNodes.values()).map((node): GraphNode => {
     const pos = positioned.get(node.id) ?? { x: LEFT_PADDING, y: TOP_PADDING };
     const outgoingEdges = outgoingEdgesByNode.get(node.id) ?? [];
     return {

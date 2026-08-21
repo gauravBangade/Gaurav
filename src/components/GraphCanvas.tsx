@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import ReactFlow, {
+import {
   Background,
   BackgroundVariant,
   Controls,
@@ -7,17 +7,20 @@ import ReactFlow, {
   Handle,
   MiniMap,
   Position,
+  ReactFlow,
   type ReactFlowInstance,
   type NodeProps,
   type NodeTypes,
-} from "reactflow";
-import "reactflow/dist/style.css";
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 import type { GraphEdge, GraphNode, GraphNodeData } from "../types/graph";
 
 type GraphCanvasProps = {
   nodes: GraphNode[];
   edges: GraphEdge[];
 };
+
+type GraphInstance = ReactFlowInstance<GraphNode, GraphEdge>;
 
 const kindClasses: Record<GraphNodeData["kind"], string> = {
   root: "border-[#7a9a7f] bg-[#f9fcf6] text-[#1d2f22]",
@@ -26,7 +29,7 @@ const kindClasses: Record<GraphNodeData["kind"], string> = {
   value: "border-[#a6bda8] bg-[#fdfdf9] text-[#243429]",
 };
 
-const TableNode = memo(({ data }: NodeProps<GraphNodeData>) => {
+const TableNode = memo(({ data }: NodeProps<GraphNode>) => {
   const classes = kindClasses[data.kind];
   const sourceHandles = data.sourceHandles ?? [];
   const renderAttribute = (attribute: string) => {
@@ -85,8 +88,14 @@ const nodeTypes: NodeTypes = {
   tableNode: TableNode,
 };
 
+const FIT_VIEW_OPTIONS = {
+  includeHiddenNodes: true,
+  padding: 0.22,
+  maxZoom: 1.2,
+} as const;
+
 export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
-  const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
+  const [rfInstance, setRfInstance] = useState<GraphInstance | null>(null);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
 
@@ -97,12 +106,7 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
     let frame2: number | null = null;
     const frame1 = requestAnimationFrame(() => {
       frame2 = requestAnimationFrame(() => {
-        rfInstance.fitView({
-          includeHiddenNodes: true,
-          padding: 0.22,
-          duration: 220,
-          maxZoom: 1.2,
-        });
+        void rfInstance.fitView({ ...FIT_VIEW_OPTIONS, duration: 220 });
       });
     });
 
@@ -117,12 +121,7 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
 
     const onResize = () => {
       requestAnimationFrame(() => {
-        rfInstance.fitView({
-          includeHiddenNodes: true,
-          padding: 0.22,
-          duration: 180,
-          maxZoom: 1.2,
-        });
+        void rfInstance.fitView({ ...FIT_VIEW_OPTIONS, duration: 180 });
       });
     };
 
@@ -135,12 +134,7 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
 
     const observer = new ResizeObserver(() => {
       requestAnimationFrame(() => {
-        rfInstance.fitView({
-          includeHiddenNodes: true,
-          padding: 0.22,
-          duration: 180,
-          maxZoom: 1.2,
-        });
+        void rfInstance.fitView({ ...FIT_VIEW_OPTIONS, duration: 180 });
       });
     });
 
@@ -166,7 +160,7 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
     [edges, hoveredEdgeId],
   );
 
-  const onEdgeClick = useCallback<EdgeMouseHandler>(
+  const onEdgeClick = useCallback<EdgeMouseHandler<GraphEdge>>(
     (_event, edge) => {
       if (!rfInstance) return;
 
@@ -176,14 +170,14 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
       const x = targetNode.position.x + 160;
       const y = targetNode.position.y + 40;
 
-      rfInstance.setCenter(x, y, { zoom: 1.05, duration: 350 });
+      void rfInstance.setCenter(x, y, { zoom: 1.05, duration: 350 });
     },
     [nodes, rfInstance],
   );
 
   return (
     <section ref={containerRef} className="json-toolkit-graph-canvas h-full w-full min-h-0 min-w-0 bg-[#f5f8f0]">
-      <ReactFlow
+      <ReactFlow<GraphNode, GraphEdge>
         nodes={nodes}
         edges={renderedEdges}
         nodeTypes={nodeTypes}
@@ -200,13 +194,13 @@ export default function GraphCanvas({ nodes, edges }: GraphCanvasProps) {
         onEdgeMouseLeave={() => setHoveredEdgeId(null)}
         proOptions={{ hideAttribution: true }}
       >
-        <MiniMap
+        <MiniMap<GraphNode>
           className="json-toolkit-minimap"
           zoomable
           pannable
           position="top-left"
           maskColor="rgba(108, 139, 115, 0.16)"
-          nodeColor={(node) => (node.data?.kind === "root" ? "#6c8b73" : "#8aa08f")}
+          nodeColor={(node) => (node.data.kind === "root" ? "#6c8b73" : "#8aa08f")}
         />
         <Controls
           position="top-right"
