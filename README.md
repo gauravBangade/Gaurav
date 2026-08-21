@@ -1,73 +1,63 @@
-# React + TypeScript + Vite
+# Gaurav Bangade — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal portfolio built with React 19, TypeScript, Vite, and Tailwind CSS. The home screen is a grid of cards that morph-expand into full sections; one of those sections is a working **JSON Toolkit**.
 
-Currently, two official plugins are available:
+## Sections
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **About** — short intro and contact links.
+- **Education** — background.
+- **JSON Toolkit** — paste JSON and get:
+  - live validation with line/column on parse errors
+  - prettify / minify, configurable indent, sorted keys
+  - copy and download of the formatted output
+  - an auto-laid-out node graph of the document (React Flow), with a resizable split pane on desktop and an editor/graph toggle on mobile
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Area       | Choice                                  |
+| ---------- | --------------------------------------- |
+| UI         | React 19, TypeScript 5.9                |
+| Build      | Vite 7                                  |
+| Styling    | Tailwind CSS 3                          |
+| Routing    | React Router 7                          |
+| Graph      | `@xyflow/react` (React Flow 12)         |
+| Lint       | ESLint 9 + typescript-eslint + react-hooks |
 
-## Expanding the ESLint configuration
+## Getting started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev       # start the dev server
+npm run build     # typecheck + production build into dist/
+npm run preview   # serve the production build locally
+npm run lint      # eslint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project layout
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+  App.tsx                  # card grid, routes, composes the morph overlay
+  main.tsx                 # entry; BrowserRouter + StrictMode
+  hooks/
+    useCardMorph.ts        # open/close animation state machine, synced to the URL
+    useFocusTrap.ts        # keeps keyboard focus inside the open overlay
+  components/
+    MorphOverlay.tsx       # the expanding dialog shell (Escape to close, focus trap)
+    About.tsx
+    Education.tsx
+    JsonToolkit.tsx        # toolbar, editor/graph panes, resize handle
+    JsonEditor.tsx         # textarea with line gutter and status bar
+    GraphCanvas.tsx        # React Flow canvas + custom table node
+    Toast.tsx
+  utils/
+    jsonToGraph.ts         # JSON → nodes/edges with a tidy-tree layout
+  types/
+    graph.ts
+```
+
+## Routes
+
+- `/` — home grid
+- `/about`, `/education`, `/json-toolkit` — sections (deep-linkable; opening via URL still plays the morph animation)
+- `/json-formatter`, `/json-graph` — legacy paths, redirect to `/json-toolkit`

@@ -1,4 +1,4 @@
-import type { Edge, Node } from "reactflow";
+import type { Edge, Node } from "@xyflow/react";
 
 export type GraphNodeData = {
   title: string;
@@ -7,7 +7,7 @@ export type GraphNodeData = {
   sourceHandles?: string[];
 };
 
-export type GraphNode = Node<GraphNodeData>;
+export type GraphNode = Node<GraphNodeData, "tableNode">;
 export type GraphEdge = Edge;
 
 export type GraphData = {
