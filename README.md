@@ -1,12 +1,12 @@
 # Gaurav Bangade — Portfolio
 
-A personal portfolio built with React 19, TypeScript, Vite, and Tailwind CSS. The home screen is a grid of cards that morph-expand into full sections; one of those sections is a working **JSON Toolkit**.
+A personal portfolio built with React 19, TypeScript, Vite, and Tailwind CSS. The home page is a single narrow column — intro, projects, recent writing, experience, education, contact — guarded by a Psyduck that uses Confusion on the whole page when clicked. It also hosts a small markdown blog and a working **JSON Toolkit**.
 
 ## Sections
 
-- **About** — short intro and contact links.
-- **Education** — background.
-- **JSON Toolkit** — paste JSON and get:
+- **Home** (`/`) — intro, *Things I've built*, recent *Writing*, *Experience*, *Education*, *Contact*. Content lives in `src/data/site.ts`.
+- **Writing** (`/blog`, `/blog/:slug`) — posts are markdown files in `src/content/posts/`, loaded at build time with `import.meta.glob` and rendered by a tiny dependency-free markdown renderer (`src/lib/markdown.tsx`). See `src/lib/posts.ts` for the frontmatter format; `draft: true` hides a post.
+- **JSON Toolkit** (`/json-toolkit`) — paste JSON and get:
   - live validation with line/column on parse errors
   - prettify / minify, configurable indent, sorted keys
   - copy and download of the formatted output
@@ -37,15 +37,24 @@ npm run lint      # eslint
 
 ```
 src/
-  App.tsx                  # card grid, routes, composes the morph overlay
+  App.tsx                  # routes + legacy redirects
   main.tsx                 # entry; BrowserRouter + StrictMode
+  data/
+    site.ts                # projects, experience, education, stack — edit content here
+  content/posts/*.md       # blog posts (frontmatter + markdown)
+  lib/
+    posts.ts               # loads + sorts posts, parses frontmatter
+    markdown.tsx           # minimal markdown → React renderer
   hooks/
-    useCardMorph.ts        # open/close animation state machine, synced to the URL
-    useFocusTrap.ts        # keeps keyboard focus inside the open overlay
+    usePsychicBlast.ts     # the Confusion animation (one rAF loop over registered glyphs)
+    useDocumentTitle.ts
   components/
-    MorphOverlay.tsx       # the expanding dialog shell (Escape to close, focus trap)
-    About.tsx
-    Education.tsx
+    About.tsx              # home page
+    Blog.tsx               # post list
+    BlogPost.tsx           # single post + prev/next
+    ui.tsx                 # shared link styles, page column, breadcrumb
+    PsychicText.tsx        # text split into blast-able glyph spans
+    PokemonDialog.tsx      # Gen 1 text box
     JsonToolkit.tsx        # toolbar, editor/graph panes, resize handle
     JsonEditor.tsx         # textarea with line gutter and status bar
     GraphCanvas.tsx        # React Flow canvas + custom table node
@@ -58,6 +67,7 @@ src/
 
 ## Routes
 
-- `/` — home grid
-- `/about`, `/education`, `/json-toolkit` — sections (deep-linkable; opening via URL still plays the morph animation)
-- `/json-formatter`, `/json-graph` — legacy paths, redirect to `/json-toolkit`
+- `/` — home (sections are deep-linkable: `/#projects`, `/#writing`, `/#experience`, `/#education`, `/#contact`)
+- `/blog` — post list; `/blog/:slug` — a post
+- `/json-toolkit` — the toolkit
+- Legacy paths redirect: `/about` → `/`, `/education` → `/#education`, `/writing` and `/posts` → `/blog`, `/json-formatter` and `/json-graph` → `/json-toolkit`
