@@ -1,11 +1,34 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import PokemonDialog from "./PokemonDialog";
 import PsychicText from "./PsychicText";
 import Toast from "./Toast";
 import { PsychicContext, usePsychicBlast, type PsychicPhase } from "../hooks/usePsychicBlast";
 
 const LINK_CLASS =
-    "break-all underline underline-offset-4 transition hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-[#466a52] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fcfbf8]";
+    "cursor-pointer font-medium text-[#466a52] transition hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-[#466a52] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f5ef] " +
+    // PsychicText renders each glyph as an inline-block span, which blocks text-decoration from
+    // propagating down — so the underline must be drawn on the glyph spans themselves.
+    "[&_[data-glyph]]:underline [&_[data-glyph]]:decoration-2 [&_[data-glyph]]:underline-offset-4";
+
+const SECTION_LABEL_CLASS =
+    "border-t border-black/10 pt-5 text-[11px] font-semibold uppercase tracking-[0.2em] text-black/40";
+
+/** Visual cue that a link opens elsewhere; the real hint lives in the sr-only text. */
+const EXTERNAL_MARK = (
+    <>
+        <span aria-hidden="true" className="ml-0.5">
+            ↗
+        </span>
+        <span className="sr-only"> (opens in a new tab)</span>
+    </>
+);
+
+const DOT = (
+    <span aria-hidden="true" className="text-black/30">
+        ·
+    </span>
+);
 
 /** How long the intro prompt and the post-blast punchline stay on screen. */
 const DIALOG_LINGER_MS = 6000;
@@ -27,7 +50,7 @@ export default function About() {
     const [introVisible, setIntroVisible] = useState(true);
     const [hovered, setHovered] = useState(false);
 
-    // One group for the whole section: every <PsychicText> below registers with it,
+    // One group for the whole page: every <PsychicText> below registers with it,
     // so clicking Psyduck blasts all the text (and shakes Psyduck) on one clock.
     const psychic = usePsychicBlast({
         companionRef: psyduckRef,
@@ -53,10 +76,10 @@ export default function About() {
         phase === "charge"
             ? DIALOG_LINES.charge
             : phase === "burst" || phase === "return"
-              ? DIALOG_LINES.attack
-              : aftermath
-                ? DIALOG_LINES.aftermath
-                : DIALOG_LINES.prompt;
+                ? DIALOG_LINES.attack
+                : aftermath
+                    ? DIALOG_LINES.aftermath
+                    : DIALOG_LINES.prompt;
 
     const dialogVisible = hovered || introVisible || aftermath || phase !== "idle";
 
@@ -74,10 +97,9 @@ export default function About() {
 
     return (
         <PsychicContext value={psychic}>
-            <div className="relative mx-auto w-full max-w-2xl space-y-5 break-words px-5 py-3 text-[#1b1b1b] sm:px-6 md:px-4 lg:px-5">
+            <div className="relative mx-auto w-full max-w-xl space-y-5 break-words px-5 py-14 text-[#1b1b1b] sm:px-6 sm:py-20">
 
-
-                {/* Psyduck sprite — click it and it uses Confusion on the whole section */}
+                {/* Psyduck sprite — click it and it uses Confusion on the whole page */}
                 <div className="flex flex-col items-start gap-1">
                     <div className="relative">
                         <button
@@ -89,7 +111,7 @@ export default function About() {
                             onBlur={() => setHovered(false)}
                             aria-label="Psyduck uses Confusion"
                             aria-describedby="psyduck-dialog"
-                            className="float-psyduck cursor-pointer rounded-full select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#466a52] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fcfbf8]"
+                            className="float-psyduck cursor-pointer rounded-full select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#466a52] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f5ef]"
                         >
                             <img
                                 ref={psyduckRef}
@@ -117,9 +139,9 @@ export default function About() {
                         </div>
                     </div>
 
-                    <h2 className="font-semibold leading-tight sm:text-2xl">
+                    <h1 className="text-xl font-semibold leading-tight sm:text-2xl">
                         <PsychicText text="Hey, I’m Gaurav." />
-                    </h2>
+                    </h1>
                 </div>
 
                 <p className="text-sm leading-relaxed text-black/80 sm:text-base">
@@ -134,17 +156,33 @@ export default function About() {
                     <PsychicText split="words" text="Outside of work, I build tools, small applications, and experiments." />
                 </p>
 
-                <div className="space-y-2 pt-4 text-sm text-black/60 sm:text-base">
-                    <p>
-                        <PsychicText split="words" text="You can find most of my work on" />{" "}
+                <section className="space-y-3 pt-6">
+                    <h2 className={SECTION_LABEL_CLASS}>
+                        <PsychicText split="words" text="Things I’ve built" />
+                    </h2>
+                    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                        <Link to="/json-toolkit" className={`text-sm sm:text-base ${LINK_CLASS}`}>
+                            <PsychicText split="words" text="JSON Toolkit" />
+                            <span aria-hidden="true" className="ml-1">
+                                →
+                            </span>
+                        </Link>
+                        <span className="text-sm text-black/55">
+                            <PsychicText split="words" text="Format, validate, and visualize JSON." />
+                        </span>
+                    </div>
+                </section>
+
+                <section className="space-y-3 pt-2">
+                    <h2 className={SECTION_LABEL_CLASS}>
+                        <PsychicText split="words" text="Contact" />
+                    </h2>
+                    <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm text-black/70 sm:text-base">
                         <a href="https://github.com/gauravBangade" target="_blank" rel="noreferrer" className={LINK_CLASS}>
                             <PsychicText split="words" text="GitHub" />
+                            {EXTERNAL_MARK}
                         </a>
-                        <PsychicText split="words" text="." />
-                    </p>
-
-                    <p>
-                        <PsychicText split="words" text="The best way to reach me is via" />{" "}
+                        {DOT}
                         <a
                             href="https://www.linkedin.com/in/gaurav-bangade-9a2430222/"
                             target="_blank"
@@ -152,19 +190,20 @@ export default function About() {
                             className={LINK_CLASS}
                         >
                             <PsychicText split="words" text="LinkedIn" />
-                        </a>{" "}
-                        <PsychicText split="words" text="or" />{" "}
+                            {EXTERNAL_MARK}
+                        </a>
+                        {DOT}
                         <button
                             type="button"
                             onClick={copyEmail}
                             aria-label={`Copy email address ${email} to clipboard`}
-                            className="cursor-pointer underline underline-offset-4 transition hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-[#466a52] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fcfbf8]"
+                            className={LINK_CLASS}
                         >
                             <PsychicText split="words" text="email" />
                         </button>
-                        <PsychicText split="words" text="." />
                     </p>
-                </div>
+                </section>
+
                 {/* Toast */}
                 <Toast
                     message={toastMessage}
