@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import PokemonDialog from "./PokemonDialog";
 import PsychicText from "./PsychicText";
+import RichText from "./RichText";
 import Toast from "./Toast";
 import { PsychicContext, usePsychicBlast, type PsychicPhase } from "../hooks/usePsychicBlast";
+import { experience } from "../data/site";
 
 const LINK_CLASS =
     "cursor-pointer font-medium text-[#466a52] transition hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-[#466a52] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f5ef] " +
@@ -29,6 +31,14 @@ const DOT = (
         ·
     </span>
 );
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "2024-11" → "Nov 2024". site.ts stores ISO year-months so <time dateTime> stays machine-readable. */
+const formatMonth = (isoMonth: string) => {
+    const [year, month] = isoMonth.split("-");
+    return `${MONTHS[Number(month) - 1]} ${year}`;
+};
 
 /** How long the intro prompt and the post-blast punchline stay on screen. */
 const DIALOG_LINGER_MS = 6000;
@@ -171,6 +181,49 @@ export default function About() {
                             <PsychicText split="words" text="Format, validate, and visualize JSON." />
                         </span>
                     </div>
+                </section>
+
+                <section id="experience" className="scroll-mt-10 space-y-4 pt-2">
+                    <h2 className={SECTION_LABEL_CLASS}>
+                        <PsychicText split="words" text="Experience" />
+                    </h2>
+                    {experience.map((job) => (
+                        <article key={job.company + job.start} className="space-y-2">
+                            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                                <h3 className="text-sm font-medium sm:text-base">
+                                    <PsychicText split="words" text={job.company} />
+                                    <span className="mx-2">{DOT}</span>
+                                    <span className="font-normal text-black/70">
+                                        <PsychicText split="words" text={job.role} />
+                                    </span>
+                                </h3>
+                                <p className="text-xs tabular-nums text-black/50 sm:text-sm">
+                                    <time dateTime={job.start}>
+                                        <PsychicText split="words" text={formatMonth(job.start)} />
+                                    </time>
+                                    <span aria-hidden="true"> – </span>
+                                    <span className="sr-only"> to </span>
+                                    {job.end ? (
+                                        <time dateTime={job.end}>
+                                            <PsychicText split="words" text={formatMonth(job.end)} />
+                                        </time>
+                                    ) : (
+                                        <PsychicText split="words" text="Present" />
+                                    )}
+                                </p>
+                            </div>
+                            <p className="text-sm leading-relaxed text-black/70 sm:text-base">
+                                <RichText text={job.summary} />
+                            </p>
+                            <ul className="list-disc space-y-2 pl-4 text-sm leading-relaxed text-black/70 marker:text-black/30 sm:text-base">
+                                {job.highlights.map((item) => (
+                                    <li key={item}>
+                                        <RichText text={item} />
+                                    </li>
+                                ))}
+                            </ul>
+                        </article>
+                    ))}
                 </section>
 
                 <section className="space-y-3 pt-2">
