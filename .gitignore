@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Private work notes (names private repos) — source for src/data/site.ts
+work.md

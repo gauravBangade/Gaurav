@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import About from "./components/About";
+import Home from "./components/home/Home";
 import JsonToolkit from "./components/JsonToolkit";
 
 const LEGACY_REDIRECTS: Record<string, string> = {
@@ -16,9 +16,9 @@ export default function App() {
       <Route
         path="/"
         element={
-          <main className="min-h-screen bg-[#f8f5ef] text-[#151515]">
-            <About />
-          </main>
+          <div className="min-h-screen bg-paper text-ink">
+            <Home />
+          </div>
         }
       />
       <Route

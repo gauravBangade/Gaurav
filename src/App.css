@@ -372,3 +372,205 @@
     animation: none;
   }
 }
+
+/* --- Pokémon sprites and move effects ------------------------------------- */
+.pixelated {
+  image-rendering: pixelated;
+}
+
+/* Overlay that move effects draw particles into (see src/pokemon/moves.ts). */
+.fx-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fx-dot,
+.fx-glyph {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.fx-dot {
+  border-radius: 9999px;
+}
+
+.fx-glyph {
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.fx-sprite {
+  position: absolute;
+  image-rendering: pixelated;
+}
+
+/* Poké Ball cursor for "send" actions. */
+.cursor-pokeball {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M2 12a10 10 0 0 1 20 0z' fill='%23e3350d'/%3E%3Cpath d='M2 12a10 10 0 0 0 20 0z' fill='%23fff'/%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%23111' stroke-width='2'/%3E%3Cpath d='M2 12h20' stroke='%23111' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23fff' stroke='%23111' stroke-width='2'/%3E%3C/svg%3E")
+      12 12,
+    pointer;
+}
+
+/* Caught! Three wobbles, then the click. */
+@keyframes pokeball-wobble {
+  0%,
+  12%,
+  30%,
+  48%,
+  66%,
+  100% {
+    transform: rotate(0);
+  }
+  6% {
+    transform: rotate(-22deg);
+  }
+  21% {
+    transform: rotate(18deg);
+  }
+  39% {
+    transform: rotate(-14deg);
+  }
+  57% {
+    transform: rotate(10deg);
+  }
+}
+
+.pokeball-wobble {
+  transform-origin: 50% 85%;
+  animation: pokeball-wobble 2.4s ease-in-out both;
+}
+
+@keyframes pokeball-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pokeball-spin {
+  animation: pokeball-spin 0.9s linear infinite;
+}
+
+@keyframes caught-star {
+  0%,
+  70% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  85% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.caught-star {
+  animation: caught-star 2.8s ease-out both;
+}
+
+@keyframes you-are-here {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(var(--accent) / 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(var(--accent) / 0);
+  }
+}
+
+.you-are-here {
+  animation: you-are-here 1.8s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pokeball-wobble,
+  .pokeball-spin,
+  .caught-star,
+  .you-are-here {
+    animation: none;
+  }
+}
+
+/* Brave Bird: the streak behind the dive and the impact flash. */
+.fx-streak {
+  position: absolute;
+  height: 22px;
+  border-radius: 9999px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, transparent, #7ab8ff 30%, #e8f3ff 85%, #fff);
+  box-shadow: 0 0 24px 6px rgba(122, 184, 255, 0.6);
+}
+
+.fx-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+}
+
+/* Work detail sheet: a centred dialog, or a bottom sheet on phones. */
+dialog.sheet {
+  width: calc(100% - 24px);
+  max-width: 640px;
+  max-height: 85dvh;
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  background: rgb(var(--card));
+  color: rgb(var(--ink));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+}
+
+dialog.sheet::backdrop {
+  background: rgba(15, 10, 25, 0.45);
+  backdrop-filter: blur(3px);
+}
+
+@media (max-width: 639px) {
+  dialog.sheet {
+    width: 100%;
+    max-width: none;
+    margin: auto 0 0;
+    border-radius: 22px 22px 0 0;
+    max-height: 88dvh;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+dialog.sheet[open] {
+  animation: sheet-in 220ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.sheet[open] {
+    animation: none;
+  }
+}
+
+/* The flagship tile's ship-to-shore sync line: dashes flowing toward shore. */
+@keyframes sync-flow {
+  to {
+    background-position: 16px 0;
+  }
+}
+
+.sync-line {
+  background: repeating-linear-gradient(90deg, rgb(var(--accent)) 0 8px, transparent 8px 16px);
+  animation: sync-flow 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sync-line {
+    animation: none;
+  }
+}

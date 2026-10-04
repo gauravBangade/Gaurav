@@ -3,16 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gaurav Bangade — Portfolio</title>
+    <title>Gaurav Bangade — Software Engineer</title>
     <meta
       name="description"
-      content="Portfolio of Gaurav Bangade, frontend engineer. React + TypeScript projects and tools, including a JSON Toolkit that formats, validates, and visualizes JSON as a graph."
+      content="Gaurav Bangade, software engineer. Offline-first platforms, real-time helpdesks, compliance dashboards and type-safe React front ends — plus a Pokémon party that gets involved."
     />
     <meta name="theme-color" content="#f8f5ef" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta property="og:title" content="Gaurav Bangade — Portfolio" />
-    <meta property="og:description" content="Me and the things I’ve built." />
+    <meta property="og:title" content="Gaurav Bangade — Software Engineer" />
+    <meta property="og:description" content="My work, the things I’ve built, and my Pokémon party." />
     <meta property="og:type" content="website" />
+    <script>
+      // Pick the theme before first paint so night mode never flashes light.
+      (function () {
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (e) {}
+        document.documentElement.dataset.theme = theme;
+        if (theme === "dark") document.querySelector('meta[name="theme-color"]').content = "#171421";
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

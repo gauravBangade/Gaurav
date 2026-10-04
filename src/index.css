@@ -5,21 +5,62 @@
 @tailwind utilities;
 
 @layer base {
+    /* Theme tokens as "r g b" triples so Tailwind can add alpha (text-ink/70).
+       index.html sets data-theme before first paint; Gengar's Night Shade flips it. */
+    :root {
+        --paper: 248 245 239;
+        --ink: 27 27 27;
+        --card: 255 253 249;
+        --accent: 70 106 82;
+        color-scheme: light;
+    }
+
+    :root[data-theme="dark"] {
+        --paper: 23 20 33;
+        --ink: 236 231 246;
+        --card: 34 30 48;
+        --accent: 186 164 242;
+        color-scheme: dark;
+    }
+
+    /* Keep anchored sections clear of the sticky header. */
+    html {
+        scroll-padding-top: 5rem;
+    }
+
     body {
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
         margin: 0;
         padding: 0;
         overflow-x: hidden;
+        background: rgb(var(--paper));
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
 }
 
-/* Cinematic vignette overlay */
-.vignette::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(ellipse at center, transparent 50%, rgba(5, 10, 25, 0.55) 100%);
+/* Idle bob in two steps, like a Game Boy party icon. Each sprite can set its
+   own --bob-delay so the party doesn't move in lockstep. A utility so that
+   variants like group-hover:sprite-bob work. */
+@keyframes sprite-bob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+@layer utilities {
+    .sprite-bob {
+        animation: sprite-bob 1.1s steps(2, jump-none) infinite;
+        animation-delay: var(--bob-delay, 0s);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .sprite-bob {
+            animation: none;
+        }
+    }
 }
