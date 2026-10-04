@@ -26,7 +26,7 @@ All content lives in `src/data/site.ts` (work, stats, timeline, contact) and `sr
 
 ### Contact form (FormSubmit)
 
-The form posts to `contact.formEndpoint` in `src/data/site.ts`. **The first submission sends an activation email**; click the link in it, and later messages arrive normally. After activating, you can swap the email address in the endpoint for the random alias FormSubmit provides, to keep the address out of the source.
+The form posts to `contact.formEndpoint` in `src/data/site.ts`, which uses FormSubmit's alias for my address rather than the address itself. The form is activated for `gaurav-fun.vercel.app`; submissions from another domain (including localhost) need their own activation.
 
 ## JSON Toolkit (`/json-toolkit`)
 

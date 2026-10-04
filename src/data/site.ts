@@ -25,11 +25,11 @@ export const profile = {
 export const contact = {
   email: "bangadegaurav@gmail.com",
   /**
-   * FormSubmit AJAX endpoint. The first submission sends an activation email
-   * to the address above; after activating you can swap the address in this
-   * URL for the random alias FormSubmit gives you, to keep it out of the source.
+   * FormSubmit AJAX endpoint, using the alias FormSubmit issued for the
+   * address above (activated for gaurav-fun.vercel.app) so the address
+   * itself isn't in the request URL.
    */
-  formEndpoint: "https://formsubmit.co/ajax/bangadegaurav@gmail.com",
+  formEndpoint: "https://formsubmit.co/ajax/b644f029ba3806cd379836408070db72",
   github: "https://github.com/gauravBangade",
   linkedin: "https://www.linkedin.com/in/gaurav-bangade-9a2430222/",
 };
