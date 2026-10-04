@@ -8,7 +8,7 @@ import PsychicText from "./PsychicText";
  * blast the words fly and the stroke stays put as their anchor.
  */
 const KEYWORD_CLASS =
-  "font-medium text-[#1b1b1b] rounded-[3px] bg-[#466a52]/[0.13] box-decoration-clone px-[3px] -mx-[3px]";
+  "font-medium text-ink rounded-[3px] bg-accent/[0.15] box-decoration-clone px-[3px] -mx-[3px]";
 
 type Segment = { text: string; keyword: boolean };
 
