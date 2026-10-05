@@ -2,27 +2,36 @@
 
 My personal site, built with React 19, TypeScript, Vite and Tailwind CSS. It's mostly about my work, with a way to email me and my Pokémon party, who all get involved. It also hosts a working **JSON Toolkit**.
 
-## The home page (`/`)
+## The site
 
-A sticky header (section links that track where you are, Gengar's night switch, "Email me"; a Game Boy START menu on phones, with a scroll-progress line underneath), a bento grid of tiles, and a footer with link columns.
+A professional portfolio first, with Pokémon as a quiet recurring theme. Every page sits in one reading column under a sticky header (name, Work · Party · Contact, and Gengar's night switch) and above a one-line footer.
 
-- **Overview** — hero with Psyduck, a "Building now" tile, commit and merged-PR counts that tick up like an EXP bar, a Gengar Night Shade tile and the JSON Toolkit.
-- **Work** — project tiles in a bento (the flagship gets a 2×2 tile with a ship-to-shore sync diagram), tagged with work domains painted in Pokémon type colours. Tapping a tile opens a detail sheet: a centred dialog on large screens, a bottom sheet on phones.
-- **Route map** — the two years as a timeline: a horizontal track on large screens, a vertical list on phones.
-- **My party** — a Game Boy party screen. Pick a Pokémon, read its entry, use its move:
-  | Pokémon | Move | Effect |
-  | --- | --- | --- |
-  | Incineroar | Darkest Lariat | spins and throws embers |
-  | Psyduck | Confusion | every word on the page wobbles, explodes and snaps back |
-  | Tyranitar | Sand Stream | a sandstorm blows across the screen and the page shakes |
-  | Gengar | Night Shade | a purple wave, then night mode toggles (the header and tile Gengars do the same) |
-  | Sylveon | Fairy Wind | hearts and ribbons float up |
-  | Skarmory | Brave Bird | charges, streaks across the screen, hits with a flash and a shake, then takes recoil damage that slowly refills |
-- **Contact** — a FormSubmit form, plus a `mailto:` link and a copy button.
+| Page | Route | What's on it |
+| --- | --- | --- |
+| Home | `/` | Who I am, where I work and what I do; Experience (summary, metrics, one line per area); Selected work; Skills; Education; Beyond work (with the current party); Get in touch |
+| Work | `/work` | Every work project and side project as a simple list |
+| Project | `/work/:id` | One work project: summary, what I did, what it's built with, previous/next |
+| Party | `/party` | The Game Boy party screen — pick a Pokémon and use its move |
+| Contact | `/contact` | A FormSubmit form, plus email, LinkedIn and GitHub |
 
-Small details: each Pokémon has a 1/64 chance to be shiny per visit (`?shiny` forces it), the Konami code (↑↑↓↓←→←→BA) makes every one shiny, and Sinistcha hides in the footer. Every effect is a no-op or an instant change under `prefers-reduced-motion`.
+Pokémon touches, all opt-in: Psyduck is the profile picture (hover it; click it and it uses Confusion on the page), Gengar is the night switch, the party gets a strip on the home page and its own page, Sinistcha hides in the footer, and the contact form says "Gotcha!" when a message is caught.
 
-All content lives in `src/data/site.ts` (work, stats, timeline, contact) and `src/data/party.ts` (the Pokémon). Work content is kept anonymous on purpose: technical detail only, with no employer, product, client or repository names.
+Party moves:
+
+| Pokémon | Move | Effect |
+| --- | --- | --- |
+| Incineroar | Darkest Lariat | spins and throws embers |
+| Psyduck | Confusion | every word on the page wobbles, explodes and snaps back |
+| Tyranitar | Sand Stream | a sandstorm blows across the screen and the page shakes |
+| Gengar | Night Shade | a purple wave, then night mode toggles (the header Gengar does the same) |
+| Sylveon | Fairy Wind | hearts and ribbons float up |
+| Skarmory | Brave Bird | charges, streaks across the screen, hits with a flash and a shake, then takes recoil damage that slowly refills |
+
+Each Pokémon has a 1/64 chance to be shiny per visit (`?shiny` forces it), and the Konami code (↑↑↓↓←→←→BA) makes every one shiny. Every effect is a no-op or an instant change under `prefers-reduced-motion`.
+
+On a page change the window starts at the top (back/forward keeps the browser's position), the tab title updates and focus moves to the page's heading. `vercel.json` rewrites every path to `index.html` so deep links work.
+
+All content lives in `src/data/site.ts` (profile, experience, skills, projects, education, contact) and `src/data/party.ts` (the Pokémon). Work descriptions are technical only: the employer is named, but no clients, products or repositories are.
 
 ### Contact form (FormSubmit)
 
@@ -42,7 +51,7 @@ Paste JSON and get:
 | ---------- | --------------------------------------- |
 | UI         | React 19, TypeScript 5.9                |
 | Build      | Vite 7                                  |
-| Styling    | Tailwind CSS 3, with theme colours as CSS variables (light + night) |
+| Styling    | Tailwind CSS 3, theme colours as CSS variables (light + night); Instrument Serif + Inter |
 | Routing    | React Router 7                          |
 | Graph      | `@xyflow/react` (React Flow 12)         |
 | Effects    | Hand-written: one rAF loop for Confusion, the Web Animations API for moves |
@@ -66,21 +75,23 @@ public/
   pokemon/<id>[-shiny].png # Gen 5-style party sprites
 src/
   App.tsx                  # routes + legacy redirects
+  pages/                   # HomePage, WorkPage, ProjectPage, PartyPage, ContactPage
   data/
     site.ts                # profile, contact, work projects, stats, timeline
     party.ts               # the party, Sinistcha, shiny odds
   hooks/
     usePsychicBlast.ts     # the Confusion animation (one rAF loop over registered glyphs)
     useTheme.ts            # light/night theme store (data-theme on <html>)
-    useInView.ts           # in-view + active-section observers
+    prefersReducedMotion.ts
+    useDocumentTitle.ts
     useKonamiCode.ts
   pokemon/
     moves.ts               # move effects (particles, sandstorm, Brave Bird, Night Shade…)
     useNightShade.ts       # Night Shade for any Gengar button
     TypeBadge.tsx          # Game Boy type tag
   components/
-    home/                  # Home page: Header, Overview, WorkSection + ProjectSheet,
-                           # RouteSection, PartySection, ContactSection, Footer…
+    site/                  # Shared site pieces: Layout, Header, Footer, Section/PageHeader,
+                           # ProjectList, PsyduckHero, PartyScreen, ContactForm, icons, styles
     PsychicText.tsx        # text split into blast-able glyph spans
     RichText.tsx           # **keyword** highlighting on top of PsychicText
     PokemonDialog.tsx      # Gen 1 text box
@@ -94,8 +105,8 @@ src/
 
 ## Routes
 
-- `/` — home (sections are deep-linkable: `/#work`, `/#numbers`, `/#route`, `/#party`, `/#contact`)
+- `/`, `/work`, `/work/:id`, `/party`, `/contact` — the site
 - `/json-toolkit` — the toolkit
-- Legacy paths redirect: `/about` and `/education` → `/`, `/json-formatter` and `/json-graph` → `/json-toolkit`
+- Legacy paths redirect: `/about`, `/education` and `/route` → `/`, `/json-formatter` and `/json-graph` → `/json-toolkit`
 
 Pokémon and Pokémon character names are trademarks of Nintendo, Creatures Inc. and GAME FREAK. Sprites are fan-made Gen 5-style sprites; this is a personal, non-commercial site.

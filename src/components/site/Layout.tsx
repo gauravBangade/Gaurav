@@ -1,34 +1,32 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import ContactSection from "./ContactSection";
+import { Outlet, useLocation, useNavigationType } from "react-router-dom";
 import Footer from "./Footer";
 import Header from "./Header";
-import Overview from "./Overview";
-import PartySection from "./PartySection";
-import ProjectSheet from "./ProjectSheet";
-import PsyduckHero from "./PsyduckHero";
-import RouteSection from "./RouteSection";
-import WorkSection from "./WorkSection";
 import Toast from "../Toast";
 import { PsychicContext, usePsychicBlast, type PsychicPhase } from "../../hooks/usePsychicBlast";
 import { useKonamiCode } from "../../hooks/useKonamiCode";
-import { contact, projects } from "../../data/site";
-import { BENTO } from "./styles";
+import { contact } from "../../data/site";
+import type { SiteContext } from "./siteContext";
+import { COLUMN } from "./styles";
 
 /** How long Psyduck's post-blast punchline stays up. */
 const AFTERMATH_MS = 6000;
 
 /**
- * The home page: sticky header, a bento grid of sections, and a footer.
- * Every <PsychicText> on the page registers with one Confusion group, fired
- * by either Psyduck.
+ * Shell for every site page: sticky header, the page in one reading column,
+ * footer. Owns what pages share — Psyduck's Confusion group (so every
+ * <PsychicText> on screen joins in), the Konami shiny state and the toast —
+ * and passes it down through the outlet context.
  */
-export default function Home() {
+export default function Layout() {
   const psyduckRef = useRef<HTMLImageElement | null>(null);
   const [phase, setPhase] = useState<PsychicPhase>("idle");
   const [aftermath, setAftermath] = useState(false);
   const [allShiny, setAllShiny] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const [openProjectId, setOpenProjectId] = useState<string | null>(null);
+  const { pathname } = useLocation();
+  const navigationType = useNavigationType();
+  const lastPath = useRef(pathname);
 
   const psychic = usePsychicBlast({
     companionRef: psyduckRef,
@@ -45,46 +43,50 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [aftermath]);
 
+  // New page: start at the top (back/forward keeps the browser's position) and
+  // move focus to its heading so screen readers announce where you landed.
+  useEffect(() => {
+    // Compare paths rather than skipping the first run, which StrictMode replays.
+    if (lastPath.current === pathname) return;
+    lastPath.current = pathname;
+    if (navigationType !== "POP") window.scrollTo(0, 0);
+    document.querySelector<HTMLElement>("#page-root h1")?.focus({ preventScroll: true });
+  }, [pathname, navigationType]);
+
   useKonamiCode(() => {
     setAllShiny(true);
     setToast("✦ Shiny Charm obtained! Every Pokémon is shiny now.");
   });
 
-  const copyEmail = async () => {
+  const copyEmail = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(contact.email);
       setToast("Email copied to clipboard ✓");
     } catch {
       setToast(`Copy failed — email is ${contact.email}`);
     }
-  };
+  }, []);
 
   const closeToast = useCallback(() => setToast(null), []);
-  const closeProject = useCallback(() => setOpenProjectId(null), []);
-  const openProject = projects.find((project) => project.id === openProjectId) ?? null;
+
+  const context: SiteContext = {
+    psyduckRef,
+    phase,
+    aftermath,
+    confusion: psychic.blast,
+    allShiny,
+    copyEmail,
+  };
 
   return (
     <PsychicContext value={psychic}>
-      <div id="top" className="text-ink">
+      <div className="flex min-h-screen flex-col bg-paper text-ink">
         <Header />
-
-        <main id="home-root" className="mx-auto w-full max-w-6xl break-words px-4 sm:px-7">
-          <Overview
-            psyduck={<PsyduckHero spriteRef={psyduckRef} phase={phase} aftermath={aftermath} onBlast={psychic.blast} />}
-            onOpenProject={setOpenProjectId}
-          />
-          <WorkSection onOpenProject={setOpenProjectId} />
-          <RouteSection />
-          <div className={`${BENTO} pt-12 sm:pt-14`}>
-            <PartySection confusion={psychic.blast} allShiny={allShiny} />
-            <ContactSection onCopyEmail={copyEmail} />
-          </div>
+        <main id="page-root" className={`${COLUMN} flex-1 break-words`}>
+          <Outlet context={context} />
         </main>
-
-        <Footer allShiny={allShiny} onCopyEmail={copyEmail} />
+        <Footer allShiny={allShiny} />
       </div>
-
-      <ProjectSheet project={openProject} onClose={closeProject} />
       <Toast key={toast ?? "none"} message={toast ?? ""} show={toast !== null} onClose={closeToast} duration={2600} />
     </PsychicContext>
   );

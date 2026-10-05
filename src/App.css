@@ -262,28 +262,6 @@
   }
 }
 
-/* Psyduck idle float (the sprite's wrapper). The sprite itself is transformed
-   by PsychicText during a blast, so the two animations don't fight. */
-@keyframes float-psyduck {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-.float-psyduck {
-  animation: float-psyduck 3.2s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .float-psyduck {
-    animation: none;
-  }
-}
-
 /* --- Pokémon (Gen 1) dialog box ------------------------------------------ */
 .poke-dialog {
   position: relative;
@@ -473,25 +451,10 @@
   animation: caught-star 2.8s ease-out both;
 }
 
-@keyframes you-are-here {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgb(var(--accent) / 0.45);
-  }
-  50% {
-    box-shadow: 0 0 0 6px rgb(var(--accent) / 0);
-  }
-}
-
-.you-are-here {
-  animation: you-are-here 1.8s ease-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .pokeball-wobble,
   .pokeball-spin,
-  .caught-star,
-  .you-are-here {
+  .caught-star {
     animation: none;
   }
 }
@@ -512,65 +475,3 @@
   background: #fff;
 }
 
-/* Work detail sheet: a centred dialog, or a bottom sheet on phones. */
-dialog.sheet {
-  width: calc(100% - 24px);
-  max-width: 640px;
-  max-height: 85dvh;
-  padding: 0;
-  border: 0;
-  border-radius: 22px;
-  background: rgb(var(--card));
-  color: rgb(var(--ink));
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-}
-
-dialog.sheet::backdrop {
-  background: rgba(15, 10, 25, 0.45);
-  backdrop-filter: blur(3px);
-}
-
-@media (max-width: 639px) {
-  dialog.sheet {
-    width: 100%;
-    max-width: none;
-    margin: auto 0 0;
-    border-radius: 22px 22px 0 0;
-    max-height: 88dvh;
-  }
-}
-
-@keyframes sheet-in {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-}
-
-dialog.sheet[open] {
-  animation: sheet-in 220ms ease-out;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  dialog.sheet[open] {
-    animation: none;
-  }
-}
-
-/* The flagship tile's ship-to-shore sync line: dashes flowing toward shore. */
-@keyframes sync-flow {
-  to {
-    background-position: 16px 0;
-  }
-}
-
-.sync-line {
-  background: repeating-linear-gradient(90deg, rgb(var(--accent)) 0 8px, transparent 8px 16px);
-  animation: sync-flow 0.8s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sync-line {
-    animation: none;
-  }
-}

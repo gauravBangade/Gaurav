@@ -1,9 +1,6 @@
-import { useEffect, useState, type RefObject } from "react";
+import { useState, type RefObject } from "react";
 import PokemonDialog from "../PokemonDialog";
 import type { PsychicPhase } from "../../hooks/usePsychicBlast";
-
-/** How long the intro prompt and the post-blast punchline stay on screen. */
-const DIALOG_LINGER_MS = 6000;
 
 const DIALOG_LINES = {
   prompt: "PSYDUCK is staring at you. (Click it!)",
@@ -20,15 +17,12 @@ type PsyduckHeroProps = {
   onBlast: () => void;
 };
 
-/** The sitting Psyduck at the top of the page. Click it and it uses Confusion on the whole page. */
+/**
+ * Psyduck as the profile picture. It stays still and quiet until you hover or
+ * focus it (then it stares back); click it and it uses Confusion on the page.
+ */
 export default function PsyduckHero({ spriteRef, phase, aftermath, onBlast }: PsyduckHeroProps) {
-  const [introVisible, setIntroVisible] = useState(true);
   const [hovered, setHovered] = useState(false);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setIntroVisible(false), DIALOG_LINGER_MS);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   const dialogLine =
     phase === "charge"
@@ -39,7 +33,7 @@ export default function PsyduckHero({ spriteRef, phase, aftermath, onBlast }: Ps
           ? DIALOG_LINES.aftermath
           : DIALOG_LINES.prompt;
 
-  const dialogVisible = hovered || introVisible || aftermath || phase !== "idle";
+  const dialogVisible = hovered || aftermath || phase !== "idle";
 
   return (
     <div className="relative">
@@ -52,23 +46,16 @@ export default function PsyduckHero({ spriteRef, phase, aftermath, onBlast }: Ps
         onBlur={() => setHovered(false)}
         aria-label="Psyduck uses Confusion"
         aria-describedby="psyduck-dialog"
-        className="float-psyduck cursor-pointer select-none rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+        className="grid h-[5.5rem] w-[5.5rem] cursor-pointer select-none place-items-center rounded-full border border-ink/10 bg-card shadow-sm transition hover:border-ink/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
       >
-        <img
-          ref={spriteRef}
-          src="/sitting-psyduck.webp"
-          alt=""
-          aria-hidden="true"
-          className="h-16 w-16 opacity-90"
-          draggable="false"
-        />
+        <img ref={spriteRef} src="/sitting-psyduck.webp" alt="" aria-hidden="true" className="h-[4.5rem] w-[4.5rem]" draggable="false" />
       </button>
 
       <div
         id="psyduck-dialog"
         role="status"
         aria-live="polite"
-        className="pointer-events-none absolute left-[4.75rem] top-0 z-10 w-max max-w-[min(17rem,calc(100vw-7.5rem))]"
+        className="pointer-events-none absolute left-[6.5rem] top-2 z-10 w-max max-w-[min(17rem,calc(100vw-9rem))]"
       >
         {dialogVisible && (
           <PokemonDialog key={dialogLine} text={dialogLine} className="poke-dialog--tail-left poke-dialog--enter" />
