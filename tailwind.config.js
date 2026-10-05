@@ -16,6 +16,7 @@ export default {
         accent: token("accent"),
       },
       fontFamily: {
+        serif: ['"Instrument Serif"', "Georgia", "serif"],
         pixel: ['"Press Start 2P"', '"Courier New"', "monospace"],
       },
     },

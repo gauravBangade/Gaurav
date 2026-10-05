@@ -1,5 +1,5 @@
 import type { MoveId } from "../data/party";
-import { prefersReducedMotion } from "../hooks/useInView";
+import { prefersReducedMotion } from "../hooks/prefersReducedMotion";
 import { toggleTheme } from "../hooks/useTheme";
 
 /**
@@ -128,7 +128,7 @@ function sandStream({ sprite }: MoveContext) {
     ],
     { duration: 600, easing: "ease-in" },
   );
-  document.getElementById("home-root")?.animate(
+  document.getElementById("page-root")?.animate(
     [0, -5, 5, -4, 4, -2, 2, 0].map((dx) => ({ transform: `translateX(${dx}px)` })),
     { duration: 520, delay: 380, easing: "linear" },
   );
@@ -242,7 +242,7 @@ function braveBird({ sprite }: MoveContext) {
       fxLayer().append(flash);
       const fade = flash.animate([{ opacity: 0.75 }, { opacity: 0 }], { duration: 450, fill: "forwards" });
       fade.onfinish = fade.oncancel = () => flash.remove();
-      document.getElementById("home-root")?.animate(
+      document.getElementById("page-root")?.animate(
         [0, -8, 8, -6, 6, -3, 3, 0].map((d) => ({ transform: `translate(${d}px, ${d / 2}px)` })),
         { duration: 420 },
       );

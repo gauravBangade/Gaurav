@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Press+Start+2P&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,20 +6,21 @@
 
 @layer base {
     /* Theme tokens as "r g b" triples so Tailwind can add alpha (text-ink/70).
-       index.html sets data-theme before first paint; Gengar's Night Shade flips it. */
+       index.html sets data-theme before first paint; Gengar's Night Shade flips it.
+       One accent only: a muted Poké Ball red. */
     :root {
-        --paper: 248 245 239;
-        --ink: 27 27 27;
-        --card: 255 253 249;
-        --accent: 70 106 82;
+        --paper: 251 250 248;
+        --ink: 24 24 27;
+        --card: 255 255 255;
+        --accent: 200 55 42;
         color-scheme: light;
     }
 
     :root[data-theme="dark"] {
-        --paper: 23 20 33;
-        --ink: 236 231 246;
-        --card: 34 30 48;
-        --accent: 186 164 242;
+        --paper: 18 17 24;
+        --ink: 236 234 242;
+        --card: 28 26 36;
+        --accent: 255 122 107;
         color-scheme: dark;
     }
 

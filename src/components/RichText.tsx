@@ -1,14 +1,7 @@
 import PsychicText from "./PsychicText";
 
-/**
- * Highlighter wash for keywords, painted on the wrapper so a multi-word keyword
- * is one continuous stroke. The padding is cancelled by a negative margin, so
- * the stroke bleeds a few pixels past the text without moving it; clone keeps
- * both ends padded when a keyword wraps onto a new line. During a Psyduck
- * blast the words fly and the stroke stays put as their anchor.
- */
-const KEYWORD_CLASS =
-  "font-medium text-ink rounded-[3px] bg-accent/[0.15] box-decoration-clone px-[3px] -mx-[3px]";
+/** Key phrases are set in medium weight and full ink — emphasis without decoration. */
+const KEYWORD_CLASS = "font-medium text-ink";
 
 type Segment = { text: string; keyword: boolean };
 

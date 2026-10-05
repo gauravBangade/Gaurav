@@ -94,9 +94,6 @@ export const boxed: PartyMember = {
   aftermath: "A bowl of matcha was poured. Is it the real thing...?",
 };
 
-export const pokemonById = (id: PokemonId): PartyMember =>
-  id === boxed.id ? boxed : party.find((member) => member.id === id)!;
-
 export const spriteSrc = (id: PokemonId, shiny = false) => `/pokemon/${id}${shiny ? "-shiny" : ""}.png`;
 
 /** 1 in 64 per Pokémon per visit; `?shiny` in the URL forces every one. */

@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import PokemonDialog from "../PokemonDialog";
 import PsychicText from "../PsychicText";
-import { SectionTitle } from "./Section";
 import TypeBadge from "../../pokemon/TypeBadge";
 import { playMove } from "../../pokemon/moves";
 import { party, rollShiny, spriteSrc, type PartyMember, type PokemonId } from "../../data/party";
-import { FOCUS_RING, TILE } from "./styles";
+import { FOCUS_RING } from "./styles";
 
 const upper = (text: string) => text.toUpperCase();
 
@@ -54,18 +53,20 @@ function HpBar({ hp, refilling, className = "" }: { hp: number; refilling: boole
   );
 }
 
-type PartySectionProps = {
+type PartyScreenProps = {
   /** Psyduck's page-wide Confusion. */
   confusion: () => void;
   /** Konami code: every sprite goes shiny. */
   allShiny: boolean;
+  /** Placement on the page. */
+  className?: string;
 };
 
 /**
- * A Game Boy party screen in a bento tile: pick a member, read its entry, use
+ * A Game Boy party screen: pick a member, read its entry, use
  * its move. The battle box narrates; it's a live region so moves are announced.
  */
-export default function PartySection({ confusion, allShiny }: PartySectionProps) {
+export default function PartyScreen({ confusion, allShiny, className = "" }: PartyScreenProps) {
   const rolls = useShinyRolls();
   const [selectedId, setSelectedId] = useState<PokemonId>(party[0].id);
   const [message, setMessage] = useState("Choose a POKéMON.");
@@ -126,14 +127,7 @@ export default function PartySection({ confusion, allShiny }: PartySectionProps)
   };
 
   return (
-    <section id="party" aria-labelledby="party-title" className={`${TILE} col-span-2 space-y-3 !p-3 sm:!p-4`}>
-      <div className="space-y-1.5 px-1.5 pt-1.5">
-        <SectionTitle id="party-title" title="My party" />
-        <p className="text-sm text-ink/65">
-          <PsychicText split="words" text="The six I battle with. Pick one, then use its move." />
-        </p>
-      </div>
-
+    <div className={className}>
       <div className="overflow-hidden rounded-2xl border-2 border-ink/80 bg-card shadow-[0_4px_0_rgb(var(--ink)/0.12)]">
         {/* Summary of the selected member */}
         <div className="flex flex-col gap-4 p-4 min-[420px]:flex-row min-[420px]:items-start">
@@ -226,11 +220,6 @@ export default function PartySection({ confusion, allShiny }: PartySectionProps)
           <PokemonDialog key={message} text={message} />
         </div>
       </div>
-
-      <p className="flex items-baseline gap-2 px-1.5 pb-1 text-xs text-ink/50">
-        <span className="shrink-0 whitespace-nowrap font-pixel text-[7px] uppercase tracking-wider">PC Box 1</span>
-        <PsychicText split="words" text="One more Pokémon is resting in the PC. It likes to hide at the very bottom of the page." />
-      </p>
-    </section>
+    </div>
   );
 }
