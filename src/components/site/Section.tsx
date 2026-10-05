@@ -1,20 +1,20 @@
 import type { ReactNode } from "react";
 import PsychicText from "../PsychicText";
-import { BODY_TEXT, HEADING } from "./styles";
+import { BODY_TEXT, HEADING, PROSE, TITLE } from "./styles";
 
 type SectionProps = {
   id: string;
   title: string;
-  /** Optional link or note on the right of the heading. */
+  /** Optional link or control on the right of the heading. */
   action?: ReactNode;
   children: ReactNode;
 };
 
-/** A page section: serif heading, then content. Spacing does the separating — no rules or boxes. */
+/** A page section: serif heading (with an optional action on the right), then content. */
 export function Section({ id, title, action, children }: SectionProps) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-24 pt-16 sm:pt-20">
-      <div className="mb-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-24 pt-[clamp(2.75rem,2rem+3vw,4.5rem)]">
+      <div className="mb-[clamp(1rem,0.8rem+0.6vw,1.5rem)] flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
         <h2 id={`${id}-title`} className={HEADING}>
           <PsychicText split="words" text={title} />
         </h2>
@@ -29,7 +29,7 @@ type PageHeaderProps = {
   title: string;
   /** Intro line(s) under the title. */
   children?: ReactNode;
-  /** Above the title, e.g. a back link or a meta line. */
+  /** Above the title, e.g. a back link. */
   before?: ReactNode;
 };
 
@@ -39,12 +39,12 @@ type PageHeaderProps = {
  */
 export function PageHeader({ title, children, before }: PageHeaderProps) {
   return (
-    <div className="pt-14 sm:pt-20">
+    <div className="pt-[clamp(2rem,1.5rem+2.5vw,3.75rem)]">
       {before}
-      <h1 tabIndex={-1} className="font-serif text-[2.6rem] leading-[1.05] focus:outline-none sm:text-[3.25rem]">
+      <h1 tabIndex={-1} className={`${TITLE} focus:outline-none`}>
         <PsychicText split="words" text={title} />
       </h1>
-      {children && <div className={`mt-4 max-w-xl ${BODY_TEXT}`}>{children}</div>}
+      {children && <div className={`mt-4 ${PROSE} ${BODY_TEXT}`}>{children}</div>}
     </div>
   );
 }

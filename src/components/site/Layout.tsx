@@ -7,7 +7,7 @@ import { PsychicContext, usePsychicBlast, type PsychicPhase } from "../../hooks/
 import { useKonamiCode } from "../../hooks/useKonamiCode";
 import { contact } from "../../data/site";
 import type { SiteContext } from "./siteContext";
-import { COLUMN } from "./styles";
+import { CONTAINER } from "./styles";
 
 /** How long Psyduck's post-blast punchline stays up. */
 const AFTERMATH_MS = 6000;
@@ -82,7 +82,7 @@ export default function Layout() {
     <PsychicContext value={psychic}>
       <div className="flex min-h-screen flex-col bg-paper text-ink">
         <Header />
-        <main id="page-root" className={`${COLUMN} flex-1 break-words`}>
+        <main id="page-root" className={`${CONTAINER} flex-1 break-words`}>
           <Outlet context={context} />
         </main>
         <Footer allShiny={allShiny} />

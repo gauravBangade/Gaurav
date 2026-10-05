@@ -3,11 +3,11 @@ import { pages, profile } from "../../data/site";
 import { spriteSrc } from "../../data/party";
 import { useTheme } from "../../hooks/useTheme";
 import { useNightShade } from "../../pokemon/useNightShade";
-import { COLUMN, FOCUS_RING } from "./styles";
+import { CONTAINER, FOCUS_RING } from "./styles";
 
 /**
  * Sticky header: name (home) on the left; page links and Gengar's night
- * switch on the right. Short enough to fit a phone without a menu.
+ * switch on the right. Fits a 360px phone without a menu.
  */
 export default function Header() {
   const theme = useTheme();
@@ -15,8 +15,8 @@ export default function Header() {
   const [first, ...rest] = profile.name.split(" ");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-ink/[0.06] bg-paper/80 backdrop-blur-md">
-      <div className={`${COLUMN} flex h-16 items-center gap-3`}>
+    <header className="print-hidden sticky top-0 z-50 border-b border-ink/[0.06] bg-paper/80 backdrop-blur-md">
+      <div className={`${CONTAINER} flex h-16 items-center gap-1.5 sm:gap-3`}>
         <Link to="/" className={`mr-auto rounded font-serif text-[1.35rem] leading-none ${FOCUS_RING}`}>
           {first}
           <span className="hidden sm:inline"> {rest.join(" ")}</span>
@@ -30,9 +30,10 @@ export default function Header() {
                 <NavLink
                   to={page.to}
                   className={({ isActive }) =>
-                    `relative block rounded-full px-2.5 py-2 text-sm transition sm:px-3 ${FOCUS_RING} ${
+                    // Tighter on phones so four links, the name and Gengar fit a 360px screen.
+                    `relative block rounded-full px-2 py-2 text-[13px] transition sm:px-3 sm:text-sm ${FOCUS_RING} ${
                       isActive
-                        ? "text-ink after:absolute after:inset-x-2.5 after:bottom-1 after:h-px after:bg-accent sm:after:inset-x-3"
+                        ? "text-ink after:absolute after:inset-x-2 after:bottom-1 after:h-px after:bg-accent sm:after:inset-x-3"
                         : "text-ink/60 hover:text-ink"
                     }`
                   }

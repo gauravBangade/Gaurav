@@ -36,8 +36,35 @@ export const contact = {
 /** Pages in the header nav. Home is the name on the left. */
 export const pages = [
   { to: "/work", label: "Work" },
+  { to: "/resume", label: "Resume" },
   { to: "/party", label: "Party" },
   { to: "/contact", label: "Contact" },
+];
+
+/** The résumé page's opening lines. */
+export const resume = {
+  headline: "Software Engineer — Product, Analytics & SaaS Systems",
+  summary:
+    "Software engineer on the early engineering team of a maritime SaaS product since October 2024. I take features from requirements and research through technical design, development, testing and release — across help desk, alerts, reports, user management, vessel and voyage management, analytics and access control. Strongest in React, TypeScript and Django REST Framework; currently building CVMS, a modular offline-first platform.",
+};
+
+/** The skills carousel on the home page: most relevant first, one area label each. */
+export const featuredSkills: { name: string; area: string }[] = [
+  { name: "React", area: "Frontend" },
+  { name: "TypeScript", area: "Language" },
+  { name: "Django REST", area: "Backend" },
+  { name: "NestJS", area: "Backend" },
+  { name: "PostgreSQL", area: "Database" },
+  { name: "TanStack Query", area: "Data fetching" },
+  { name: "Node.js", area: "Backend" },
+  { name: "Python", area: "Language" },
+  { name: "Redux", area: "State" },
+  { name: "ECharts", area: "Charts" },
+  { name: "Tailwind CSS", area: "Styling" },
+  { name: "Vite", area: "Tooling" },
+  { name: "Vitest", area: "Testing" },
+  { name: "LangChain", area: "AI / LLM" },
+  { name: "Git", area: "Tooling" },
 ];
 
 /** One line of an experience entry: a short label, then a sentence. Text supports **keyword** markers. */

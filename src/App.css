@@ -296,7 +296,7 @@
   animation: poke-blink 0.9s steps(1, end) infinite;
 }
 
-/* Speech-bubble tail pointing left toward Psyduck */
+/* Speech-bubble tail pointing left, toward Psyduck */
 .poke-dialog--tail-left::before,
 .poke-dialog--tail-left::after {
   content: "";
@@ -363,6 +363,21 @@
   z-index: 60;
   overflow: hidden;
   pointer-events: none;
+}
+
+/* Sand Stream's tint: twice the screen wide, a soft band of --sand-haze that the
+   effect slides across the viewport. */
+.fx-haze {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--sand-haze) 20%,
+    var(--sand-haze) 80%,
+    transparent 100%
+  );
 }
 
 .fx-dot,

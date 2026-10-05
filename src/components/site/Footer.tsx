@@ -4,7 +4,7 @@ import { GitHubIcon, LinkedInIcon, MailIcon } from "./icons";
 import { contact, profile } from "../../data/site";
 import { boxed, rollShiny, spriteSrc } from "../../data/party";
 import { playMove } from "../../pokemon/moves";
-import { COLUMN, FOCUS_RING } from "./styles";
+import { CONTAINER, FOCUS_RING } from "./styles";
 
 const LINGER_MS = 5000;
 
@@ -79,8 +79,8 @@ const SOCIAL = [
 /** One quiet line: Sinistcha peeking, the copyright, and where else to find me. */
 export default function Footer({ allShiny }: { allShiny: boolean }) {
   return (
-    <footer className="mt-24 border-t border-ink/[0.08]">
-      <div className={`${COLUMN} flex items-end justify-between gap-4`}>
+    <footer className="print-hidden mt-20 border-t border-ink/[0.08]">
+      <div className={`${CONTAINER} flex items-end justify-between gap-4`}>
         <div className="flex items-end gap-3">
           <SinistchaPeek allShiny={allShiny} />
           <p className="whitespace-nowrap pb-4 text-xs text-ink/50 sm:text-sm">

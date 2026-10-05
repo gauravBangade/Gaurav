@@ -4,17 +4,20 @@ My personal site, built with React 19, TypeScript, Vite and Tailwind CSS. It's m
 
 ## The site
 
-A professional portfolio first, with Pokémon as a quiet recurring theme. Every page sits in one reading column under a sticky header (name, Work · Party · Contact, and Gengar's night switch) and above a one-line footer.
+A professional portfolio first, with a subtle retro Game Boy layer: cards use a square-dot "pixel" frame, small captions use a pixel font, and lists use a ▶ menu cursor. Headings (Instrument Serif) and body text (Inter) stay clean. Pages share a sticky header (name, Work · Resume · Party · Contact, Gengar's night switch) and a one-line footer.
+
+The layout is fluid: a 72rem container on large screens, side padding from 1rem on phones to 2.5rem on desktops, running text capped at about 65 characters per line, and type and spacing scaled with `clamp()`.
 
 | Page | Route | What's on it |
 | --- | --- | --- |
-| Home | `/` | Who I am, where I work and what I do; Experience (summary, metrics, one line per area); Selected work; Skills; Education; Beyond work (with the current party); Get in touch |
-| Work | `/work` | Every work project and side project as a simple list |
-| Project | `/work/:id` | One work project: summary, what I did, what it's built with, previous/next |
-| Party | `/party` | The Game Boy party screen — pick a Pokémon and use its move |
-| Contact | `/contact` | A FormSubmit form, plus email, LinkedIn and GitHub |
+| Home | `/` | An introduction and guide: intro with a "Trainer card" of quick facts → Skills (a compact inventory-style carousel) → Experience (summary, metrics, areas) → Projects (three cards) → Education → Off the clock → Contact. Each points to the page with the detail. |
+| Work | `/work` | Every work project and side project as cards |
+| Project | `/work/:id` | One work project: the story, plus a facts card (status, dates, my part, stack) and previous/next |
+| Resume | `/resume` | A concise CV. "Print / save as PDF" prints it as a plain two-page document without the site chrome. |
+| Party | `/party` | The Game Boy party screen — pick a Pokémon and use its move — with a notes card |
+| Contact | `/contact` | A FormSubmit form, with email, LinkedIn and GitHub beside it |
 
-Pokémon touches, all opt-in: Psyduck is the profile picture (hover it; click it and it uses Confusion on the page), Gengar is the night switch, the party gets a strip on the home page and its own page, Sinistcha hides in the footer, and the contact form says "Gotcha!" when a message is caught.
+Pokémon touches, all opt-in: Psyduck is the profile picture (hover it; click it and it uses Confusion on the page), Gengar is the night switch, the party gets a card on the home page and its own page, Sinistcha hides in the footer, and the contact form says "Gotcha!" when a message is caught.
 
 Party moves:
 
@@ -31,7 +34,7 @@ Each Pokémon has a 1/64 chance to be shiny per visit (`?shiny` forces it), and 
 
 On a page change the window starts at the top (back/forward keeps the browser's position), the tab title updates and focus moves to the page's heading. `vercel.json` rewrites every path to `index.html` so deep links work.
 
-All content lives in `src/data/site.ts` (profile, experience, skills, projects, education, contact) and `src/data/party.ts` (the Pokémon). Work descriptions are technical only: the employer is named, but no clients, products or repositories are.
+All content lives in `src/data/site.ts` (profile, résumé text, featured skills, experience, skills, projects, education, contact) and `src/data/party.ts` (the Pokémon). Work descriptions are technical only: the employer is named, but no clients, products or repositories are.
 
 ### Contact form (FormSubmit)
 
@@ -75,7 +78,7 @@ public/
   pokemon/<id>[-shiny].png # Gen 5-style party sprites
 src/
   App.tsx                  # routes + legacy redirects
-  pages/                   # HomePage, WorkPage, ProjectPage, PartyPage, ContactPage
+  pages/                   # HomePage, WorkPage, ProjectPage, ResumePage, PartyPage, ContactPage
   data/
     site.ts                # profile, contact, work projects, stats, timeline
     party.ts               # the party, Sinistcha, shiny odds
@@ -91,7 +94,8 @@ src/
     TypeBadge.tsx          # Game Boy type tag
   components/
     site/                  # Shared site pieces: Layout, Header, Footer, Section/PageHeader,
-                           # ProjectList, PsyduckHero, PartyScreen, ContactForm, icons, styles
+                           # ProjectList (cards), SkillsCarousel, PsyduckHero, PartyScreen,
+                           # ContactForm, icons, styles
     PsychicText.tsx        # text split into blast-able glyph spans
     RichText.tsx           # **keyword** highlighting on top of PsychicText
     PokemonDialog.tsx      # Gen 1 text box
@@ -105,7 +109,7 @@ src/
 
 ## Routes
 
-- `/`, `/work`, `/work/:id`, `/party`, `/contact` — the site
+- `/`, `/work`, `/work/:id`, `/resume`, `/party`, `/contact` — the site
 - `/json-toolkit` — the toolkit
 - Legacy paths redirect: `/about`, `/education` and `/route` → `/`, `/json-formatter` and `/json-graph` → `/json-toolkit`
 
