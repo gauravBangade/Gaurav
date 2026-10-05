@@ -13,8 +13,8 @@ type SectionProps = {
 /** A page section: serif heading, then content. Spacing does the separating — no rules or boxes. */
 export function Section({ id, title, action, children }: SectionProps) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-24 pt-16 sm:pt-20">
-      <div className="mb-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-24 pt-14 sm:pt-16">
+      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 id={`${id}-title`} className={HEADING}>
           <PsychicText split="words" text={title} />
         </h2>
@@ -39,7 +39,7 @@ type PageHeaderProps = {
  */
 export function PageHeader({ title, children, before }: PageHeaderProps) {
   return (
-    <div className="pt-14 sm:pt-20">
+    <div className="pt-10 sm:pt-14">
       {before}
       <h1 tabIndex={-1} className="font-serif text-[2.6rem] leading-[1.05] focus:outline-none sm:text-[3.25rem]">
         <PsychicText split="words" text={title} />

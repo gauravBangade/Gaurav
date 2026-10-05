@@ -34,10 +34,10 @@ function Hero() {
   const { psyduckRef, phase, aftermath, confusion } = useSite();
 
   return (
-    <section aria-label="Introduction" className="pt-14 sm:pt-20">
+    <section aria-label="Introduction" className="pt-8 sm:pt-10">
       <PsyduckHero spriteRef={psyduckRef} phase={phase} aftermath={aftermath} onBlast={confusion} />
 
-      <h1 tabIndex={-1} className="mt-7 font-serif text-[3rem] leading-none focus:outline-none sm:text-[3.75rem]">
+      <h1 tabIndex={-1} className="mt-5 font-serif text-[3rem] leading-none focus:outline-none sm:text-[3.75rem]">
         <PsychicText split="words" text={profile.name} />
       </h1>
       <p className="mt-3 text-lg text-ink/80 sm:text-xl">
@@ -67,11 +67,11 @@ function Hero() {
         </li>
       </ul>
 
-      <p className={`mt-6 max-w-xl ${BODY_TEXT}`}>
+      <p className={`mt-5 max-w-xl ${BODY_TEXT}`}>
         <RichText text={profile.intro} />
       </p>
 
-      <div className="mt-8 flex flex-wrap items-center gap-3">
+      <div className="mt-7 flex flex-wrap items-center gap-3">
         <Link to="/contact" className={BUTTON_PRIMARY}>
           Get in touch
         </Link>

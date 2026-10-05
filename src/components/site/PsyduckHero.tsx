@@ -36,7 +36,8 @@ export default function PsyduckHero({ spriteRef, phase, aftermath, onBlast }: Ps
   const dialogVisible = hovered || aftermath || phase !== "idle";
 
   return (
-    <div className="relative">
+    // w-fit: the bubble is placed relative to the avatar, not the whole column.
+    <div className="relative w-fit">
       <button
         type="button"
         onClick={onBlast}
@@ -46,16 +47,23 @@ export default function PsyduckHero({ spriteRef, phase, aftermath, onBlast }: Ps
         onBlur={() => setHovered(false)}
         aria-label="Psyduck uses Confusion"
         aria-describedby="psyduck-dialog"
-        className="grid h-[5.5rem] w-[5.5rem] cursor-pointer select-none place-items-center rounded-full border border-ink/10 bg-card shadow-sm transition hover:border-ink/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+        className="grid h-[4.5rem] w-[4.5rem] cursor-pointer select-none place-items-center rounded-full border border-ink/10 bg-card shadow-sm transition hover:border-ink/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:h-[5.5rem] sm:w-[5.5rem]"
       >
-        <img ref={spriteRef} src="/sitting-psyduck.webp" alt="" aria-hidden="true" className="h-[4.5rem] w-[4.5rem]" draggable="false" />
+        <img
+          ref={spriteRef}
+          src="/sitting-psyduck.webp"
+          alt=""
+          aria-hidden="true"
+          className="h-[3.75rem] w-[3.75rem] sm:h-[4.5rem] sm:w-[4.5rem]"
+          draggable="false"
+        />
       </button>
 
       <div
         id="psyduck-dialog"
         role="status"
         aria-live="polite"
-        className="pointer-events-none absolute left-[6.5rem] top-2 z-10 w-max max-w-[min(17rem,calc(100vw-9rem))]"
+        className="pointer-events-none absolute left-[calc(100%+0.85rem)] top-1 z-10 w-max max-w-[min(17rem,calc(100vw-8rem))]"
       >
         {dialogVisible && (
           <PokemonDialog key={dialogLine} text={dialogLine} className="poke-dialog--tail-left poke-dialog--enter" />

@@ -43,6 +43,9 @@ type ParticleOptions = {
   /** A glyph (♥, ✦) or nothing for a plain dot. */
   text?: string;
   size: number;
+  /** Stretch a dot into a streak: overrides `size` for its width and height. */
+  width?: number;
+  height?: number;
   color: string;
   keyframes: Keyframe[];
   duration: number;
@@ -50,7 +53,7 @@ type ParticleOptions = {
   easing?: string;
 };
 
-function particle({ x, y, text, size, color, keyframes, duration, delay = 0, easing = "ease-out" }: ParticleOptions) {
+function particle({ x, y, text, size, width, height, color, keyframes, duration, delay = 0, easing = "ease-out" }: ParticleOptions) {
   const el = document.createElement("span");
   el.className = text ? "fx-glyph" : "fx-dot";
   el.style.left = `${x}px`;
@@ -60,7 +63,8 @@ function particle({ x, y, text, size, color, keyframes, duration, delay = 0, eas
     el.style.fontSize = `${size}px`;
     el.style.color = color;
   } else {
-    el.style.width = el.style.height = `${size}px`;
+    el.style.width = `${width ?? size}px`;
+    el.style.height = `${height ?? size}px`;
     el.style.background = color;
   }
   fxLayer().append(el);
@@ -97,27 +101,58 @@ function darkestLariat({ sprite }: MoveContext) {
   return 1700;
 }
 
+/** Sand reads against the page: dark grains on the light theme, pale ones at night. */
+const SAND = {
+  light: { grains: ["#8f5f22", "#a87531", "#7a4f1c", "#c18f45"], haze: "rgba(176, 124, 52, 0.22)" },
+  dark: { grains: ["#f0d79c", "#e2c07a", "#f7e7bf", "#d1aa64"], haze: "rgba(222, 186, 112, 0.14)" },
+};
+
 function sandStream({ sprite }: MoveContext) {
   const width = window.innerWidth;
   const height = window.innerHeight;
-  for (let i = 0; i < 110; i++) {
-    const y = random(0, height);
+  const sand = SAND[document.documentElement.dataset.theme === "dark" ? "dark" : "light"];
+  const duration = 3600;
+
+  // The battle-screen tint: a wide band of haze drifting across the page while the storm blows.
+  const haze = document.createElement("span");
+  haze.className = "fx-haze";
+  haze.style.setProperty("--sand-haze", sand.haze);
+  fxLayer().append(haze);
+  const drift = haze.animate(
+    [
+      { transform: "translateX(-50%)", opacity: 0 },
+      { opacity: 1, offset: 0.15 },
+      { opacity: 1, offset: 0.75 },
+      { transform: "translateX(0)", opacity: 0 },
+    ],
+    { duration, easing: "linear", fill: "both" },
+  );
+  drift.onfinish = drift.oncancel = () => haze.remove();
+
+  // Wind-stretched streaks plus a scatter of fine grains, all blowing left to right.
+  for (let i = 0; i < 220; i++) {
+    const streak = i < 150;
+    const tilt = random(-4, 9);
+    const y = random(-20, height + 20);
+    const peak = streak ? random(0.6, 0.9) : random(0.7, 1);
     particle({
-      x: -20,
+      x: -30,
       y,
-      size: random(2, 5),
-      color: pick(["#d6b46e", "#c49a55", "#e8d29a", "#a87d45"]),
+      size: random(2, 4),
+      ...(streak ? { width: random(10, 26), height: random(1.5, 3) } : {}),
+      color: pick(sand.grains),
       keyframes: [
-        { transform: at(0, 0), opacity: 0 },
-        { transform: at(width * 0.15, random(-20, 20)), opacity: 0.9, offset: 0.1 },
-        { transform: at(width * 0.6, random(-50, 50)), opacity: 0.9, offset: 0.6 },
-        { transform: at(width + 40, random(-80, 80)), opacity: 0 },
+        { transform: at(0, 0, `rotate(${tilt}deg)`), opacity: 0 },
+        { transform: at(width * 0.2, random(-25, 25), `rotate(${tilt}deg)`), opacity: peak, offset: 0.12 },
+        { transform: at(width * 0.7, random(-60, 60), `rotate(${tilt}deg)`), opacity: peak, offset: 0.7 },
+        { transform: at(width + 60, random(-90, 90), `rotate(${tilt}deg)`), opacity: 0 },
       ],
-      duration: random(1100, 2000),
-      delay: random(0, 1400),
+      duration: random(850, 1600),
+      delay: random(0, duration - 1500),
       easing: "linear",
     });
   }
+
   sprite?.animate(
     [
       { transform: "translateY(0)" },
@@ -132,7 +167,7 @@ function sandStream({ sprite }: MoveContext) {
     [0, -5, 5, -4, 4, -2, 2, 0].map((dx) => ({ transform: `translateX(${dx}px)` })),
     { duration: 520, delay: 380, easing: "linear" },
   );
-  return 3400;
+  return duration;
 }
 
 function nightShade({ sprite }: MoveContext) {

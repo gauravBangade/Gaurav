@@ -79,7 +79,7 @@ const SOCIAL = [
 /** One quiet line: Sinistcha peeking, the copyright, and where else to find me. */
 export default function Footer({ allShiny }: { allShiny: boolean }) {
   return (
-    <footer className="mt-24 border-t border-ink/[0.08]">
+    <footer className="mt-20 border-t border-ink/[0.08]">
       <div className={`${COLUMN} flex items-end justify-between gap-4`}>
         <div className="flex items-end gap-3">
           <SinistchaPeek allShiny={allShiny} />
