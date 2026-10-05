@@ -2,6 +2,7 @@ import PsychicText from "../components/PsychicText";
 import PartyScreen from "../components/site/PartyScreen";
 import { PageHeader } from "../components/site/Section";
 import { useSite } from "../components/site/siteContext";
+import { CARD, PIXEL_LABEL } from "../components/site/styles";
 import { SHINY_ODDS } from "../data/party";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
@@ -27,16 +28,26 @@ export default function PartyPage() {
         </p>
       </PageHeader>
 
-      <PartyScreen confusion={confusion} allShiny={allShiny} className="mt-10" />
+      {/* Desktop: the party screen with a notes card beside it. */}
+      <div className="mt-[clamp(1.5rem,1rem+2vw,2.5rem)] grid items-start gap-[clamp(1rem,0.6rem+1.5vw,2rem)] lg:grid-cols-[minmax(0,1fr)_17rem]">
+        <PartyScreen confusion={confusion} allShiny={allShiny} />
 
-      <ul className="mt-8 space-y-2 text-sm text-ink/55">
-        {NOTES.map((note) => (
-          <li key={note} className="relative pl-4">
-            <span aria-hidden="true" className="absolute left-0 top-[0.6em] h-1 w-1 rounded-full bg-ink/30" />
-            <PsychicText split="words" text={note} />
-          </li>
-        ))}
-      </ul>
+        <aside aria-label="Notes" className={CARD}>
+          <span className={PIXEL_LABEL}>Notes</span>
+          <ul className="mt-3 space-y-3 text-sm leading-relaxed text-ink/70">
+            {NOTES.map((note) => (
+              <li key={note} className="flex gap-2.5">
+                <span aria-hidden="true" className="mt-[0.45em] font-pixel text-[7px] leading-none text-accent">
+                  ▶
+                </span>
+                <span>
+                  <PsychicText split="words" text={note} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
     </>
   );
 }

@@ -1,12 +1,12 @@
 import { useId, useRef, useState, type FormEvent } from "react";
 import PokeballIcon from "./PokeballIcon";
 import { contact } from "../../data/site";
-import { BUTTON_PRIMARY, LINK_CLASS } from "./styles";
+import { BUTTON_PRIMARY, CARD, LINK_CLASS } from "./styles";
 
 type Status = { state: "idle" } | { state: "sending" } | { state: "sent"; name: string } | { state: "error"; reason: string };
 
 const FIELD_CLASS =
-  "w-full rounded-xl border border-ink/15 bg-paper px-3.5 py-2.5 text-base text-ink placeholder:text-ink/35 transition focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30";
+  "w-full rounded-md border border-ink/15 bg-paper px-3.5 py-2.5 text-base text-ink placeholder:text-ink/35 transition focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30";
 
 const LABEL_CLASS = "text-sm font-medium text-ink/75";
 
@@ -76,7 +76,7 @@ export default function ContactForm({ className = "" }: { className?: string }) 
   };
 
   return (
-    <div className={`rounded-2xl border border-ink/10 bg-card p-5 sm:p-7 ${className}`}>
+    <div className={`${CARD} ${className}`}>
       {status.state === "sent" ? (
         <div role="status" className="flex flex-col items-center gap-4 py-6 text-center">
           <div className="relative">

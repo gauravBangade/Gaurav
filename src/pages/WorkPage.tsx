@@ -1,5 +1,5 @@
 import PsychicText from "../components/PsychicText";
-import { SideProjectList, WorkProjectList } from "../components/site/ProjectList";
+import { SideProjectGrid, WorkProjectGrid } from "../components/site/ProjectList";
 import { PageHeader, Section } from "../components/site/Section";
 import { personalProjects, profile, projects } from "../data/site";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
@@ -19,11 +19,11 @@ export default function WorkPage() {
       </PageHeader>
 
       <Section id="at-work" title="At work">
-        <WorkProjectList items={projects} />
+        <WorkProjectGrid items={projects} />
       </Section>
 
       <Section id="side-projects" title="Side projects">
-        <SideProjectList items={personalProjects} />
+        <SideProjectGrid items={personalProjects} />
       </Section>
     </>
   );

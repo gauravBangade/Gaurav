@@ -6,6 +6,7 @@ import ContactPage from "./pages/ContactPage";
 import HomePage from "./pages/HomePage";
 import PartyPage from "./pages/PartyPage";
 import ProjectPage from "./pages/ProjectPage";
+import ResumePage from "./pages/ResumePage";
 import WorkPage from "./pages/WorkPage";
 
 const LEGACY_REDIRECTS: Record<string, string> = {
@@ -24,6 +25,7 @@ export default function App() {
         <Route index element={<HomePage />} />
         <Route path="work" element={<WorkPage />} />
         <Route path="work/:id" element={<ProjectPage />} />
+        <Route path="resume" element={<ResumePage />} />
         <Route path="party" element={<PartyPage />} />
         <Route path="contact" element={<ContactPage />} />
       </Route>
