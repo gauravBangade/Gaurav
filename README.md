@@ -6,8 +6,8 @@ My personal site, built with React 19, TypeScript, Vite and Tailwind CSS. It's m
 
 A sticky header (section links that track where you are, Gengar's night switch, "Email me"; a Game Boy START menu on phones, with a scroll-progress line underneath), a bento grid of tiles, and a footer with link columns.
 
-- **Overview** — hero with Psyduck, a "Building now" tile, four stat tiles that count up like an EXP bar, a Gengar Night Shade tile and the JSON Toolkit.
-- **Work** — project tiles in a bento (the flagship gets a 2×2 tile with a ship-to-shore sync diagram), tagged with work domains painted in Pokémon type colours. Each has a party member as its "lead". Tapping a tile opens a detail sheet: a centred dialog on large screens, a bottom sheet on phones.
+- **Overview** — hero with Psyduck, a "Building now" tile, commit and merged-PR counts that tick up like an EXP bar, a Gengar Night Shade tile and the JSON Toolkit.
+- **Work** — project tiles in a bento (the flagship gets a 2×2 tile with a ship-to-shore sync diagram), tagged with work domains painted in Pokémon type colours. Tapping a tile opens a detail sheet: a centred dialog on large screens, a bottom sheet on phones.
 - **Route map** — the two years as a timeline: a horizontal track on large screens, a vertical list on phones.
 - **My party** — a Game Boy party screen. Pick a Pokémon, read its entry, use its move:
   | Pokémon | Move | Effect |

@@ -9,8 +9,6 @@
  * employer, product, client, repository or ticket names.
  */
 
-import type { PokemonId } from "./party";
-
 export const profile = {
   name: "Gaurav Bangade",
   greeting: "Hey, I’m Gaurav.",
@@ -66,8 +64,6 @@ export type Project = {
   /** Shown when the card is expanded. Supports **keyword** markers. */
   details: string[];
   stack: string[];
-  /** The party member who "leads" this project, with a one-line reason. */
-  lead?: { pokemon: PokemonId; note: string };
 };
 
 export const projects: Project[] = [
@@ -87,7 +83,6 @@ export const projects: Project[] = [
       "An animated sign-in diorama held at **60 fps**, and architecture docs on the deployment model, MQTT vs HTTP reliability, node roles and API data contracts.",
     ],
     stack: ["NestJS", "Fastify", "Prisma", "PostgreSQL", "React", "TanStack", "pg-boss"],
-    lead: { pokemon: "tyranitar", note: "Sand Stream sets the field before the rest of the team arrives." },
   },
   {
     id: "helpdesk",
@@ -105,7 +100,6 @@ export const projects: Project[] = [
       "Resilience fixes: kept rotated refresh tokens to stop surprise logouts, recovered from **stale chunks** after a deploy, and made dashboard counts add up and link through to their lists.",
     ],
     stack: ["React", "TypeScript", "Django", "WebSockets"],
-    lead: { pokemon: "incineroar", note: "The best support in doubles — it makes everyone around it better." },
   },
   {
     id: "reporting",
@@ -123,7 +117,6 @@ export const projects: Project[] = [
       "Build and quality: cleared dozens of hook warnings, added Husky and stricter lint rules, Docker and **white-label builds**, and stabilised a major release by working through its critical and high-priority defects.",
     ],
     stack: ["React", "TypeScript", "Vite", "Redux", "TanStack Query", "Formik", "Django REST"],
-    lead: { pokemon: "psyduck", note: "Water type, so it handles the ships. Mostly." },
   },
   {
     id: "voyage-estimator",
@@ -139,7 +132,6 @@ export const projects: Project[] = [
       "Saved estimation history, and a complete developer guide for whoever picks it up next.",
     ],
     stack: ["React", "TypeScript", "Django REST"],
-    lead: { pokemon: "skarmory", note: "It has flown every route before the ship has." },
   },
   {
     id: "security",
@@ -156,7 +148,6 @@ export const projects: Project[] = [
       "Ran a **security audit** across several repositories, with every finding tracked as an issue.",
     ],
     stack: ["JWT", "Django REST", "React"],
-    lead: { pokemon: "gengar", note: "Nothing hides in the shadows from a Ghost type." },
   },
   {
     id: "design-system",
@@ -171,7 +162,6 @@ export const projects: Project[] = [
       "Vendored into the platform as its **only styling system**, so product screens use the same tokens and primitives the showcase documents; later mirrored as a standalone UI kit and gallery.",
     ],
     stack: ["React", "TypeScript", "CSS tokens"],
-    lead: { pokemon: "sylveon", note: "Ribbons, pastel and surprisingly strong. Good design is like that." },
   },
   {
     id: "partner-portal",
@@ -203,8 +193,6 @@ export type Stat = { label: string; value: number; prefix?: string; suffix?: str
 export const stats: Stat[] = [
   { label: "Commits", value: 1270, prefix: "~" },
   { label: "Merged PRs", value: 1110, prefix: "~" },
-  { label: "Repositories", value: 13 },
-  { label: "Release lines", value: 8 },
 ];
 
 export type TimelineStop = { period: string; focus: string };

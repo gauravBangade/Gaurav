@@ -93,7 +93,11 @@ type OverviewProps = {
   onOpenProject: (id: string) => void;
 };
 
-/** The first screen: hero, what I'm building now, the numbers and two playful tiles. */
+/**
+ * The first screen. Large screens: the hero fills the left half, three rows
+ * tall; "Building now", the two stats, and Gengar + the side project stack on
+ * the right. Phones: one column, small tiles two across.
+ */
 export default function Overview({ psyduck, onOpenProject }: OverviewProps) {
   // Observe the whole section: the <dl> below is display: contents, which has no box to intersect.
   const [sectionRef, statsInView] = useInView<HTMLElement>("0px");
@@ -103,7 +107,7 @@ export default function Overview({ psyduck, onOpenProject }: OverviewProps) {
   return (
     <section ref={sectionRef} aria-label="Overview" className={`${BENTO} pt-6 sm:pt-8`}>
       <div
-        className={`${TILE} col-span-2 bg-gradient-to-br from-accent/[0.14] via-card to-card p-6 lg:row-span-2 lg:p-7`}
+        className={`${TILE} col-span-2 bg-gradient-to-br from-accent/[0.14] via-card to-card p-6 lg:row-span-3 lg:p-7`}
       >
         {psyduck}
         <h1 className="mt-4 text-[clamp(1.85rem,4vw,2.6rem)] font-semibold leading-tight">
@@ -129,16 +133,12 @@ export default function Overview({ psyduck, onOpenProject }: OverviewProps) {
         </div>
       </div>
 
-      <button type="button" onClick={() => onOpenProject(current.id)} className={`${TILE_INTERACTIVE} col-span-2 flex items-center gap-4`}>
-        {current.lead && (
-          <img
-            src={spriteSrc(current.lead.pokemon)}
-            alt=""
-            aria-hidden="true"
-            draggable="false"
-            className="pixelated h-20 w-20 shrink-0 sm:h-[84px] sm:w-[84px]"
-          />
-        )}
+      <button
+        type="button"
+        onClick={() => onOpenProject(current.id)}
+        aria-haspopup="dialog"
+        className={`${TILE_INTERACTIVE} col-span-2 flex items-center justify-between gap-4`}
+      >
         <span className="block min-w-0">
           <span className={`${EYEBROW} flex items-center gap-2`}>
             <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#4cd964] shadow-[0_0_0_3px_rgba(76,217,100,0.2)]" />
@@ -151,9 +151,12 @@ export default function Overview({ psyduck, onOpenProject }: OverviewProps) {
             <PsychicText split="words" text={current.stack.slice(0, 5).join(" · ")} />
           </span>
         </span>
+        <span aria-hidden="true" className="shrink-0 text-xs font-medium text-accent">
+          Details →
+        </span>
       </button>
 
-      {/* display: contents lets the four stat tiles sit directly in the bento grid. */}
+      {/* display: contents lets the stat tiles sit directly in the bento grid. */}
       <dl id="numbers" className="contents">
         {stats.map((stat) => (
           <StatTile key={stat.label} stat={stat} run={statsInView} />

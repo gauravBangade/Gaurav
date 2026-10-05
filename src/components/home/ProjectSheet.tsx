@@ -3,7 +3,6 @@ import PsychicText from "../PsychicText";
 import RichText from "../RichText";
 import { DomainBadges } from "./DomainBadges";
 import { projects, type Project } from "../../data/site";
-import { pokemonById, spriteSrc } from "../../data/party";
 import { EYEBROW, FOCUS_RING } from "./styles";
 
 type ProjectSheetProps = {
@@ -32,7 +31,6 @@ export default function ProjectSheet({ project, onClose }: ProjectSheetProps) {
   }, [project]);
 
   const index = project ? projects.indexOf(project) : -1;
-  const lead = project?.lead && pokemonById(project.lead.pokemon);
 
   return (
     <dialog
@@ -55,21 +53,16 @@ export default function ProjectSheet({ project, onClose }: ProjectSheetProps) {
             ✕
           </button>
 
-          <div className="flex items-start gap-3 pr-12">
-            {lead && (
-              <img src={spriteSrc(lead.id)} alt="" aria-hidden="true" draggable="false" className="pixelated -my-2 h-16 w-16 shrink-0" />
-            )}
-            <div className="min-w-0">
-              <p className={EYEBROW}>
-                No.{String(index + 1).padStart(3, "0")} · {project.period}
-              </p>
-              <h2 id="project-sheet-title" className="mt-1.5 text-xl font-semibold leading-snug">
-                <PsychicText split="words" text={project.title} />
-              </h2>
-              <p className="mt-1 text-sm text-ink/55">
-                <PsychicText split="words" text={project.role} />
-              </p>
-            </div>
+          <div className="pr-12">
+            <p className={EYEBROW}>
+              No.{String(index + 1).padStart(3, "0")} · {project.period}
+            </p>
+            <h2 id="project-sheet-title" className="mt-1.5 text-xl font-semibold leading-snug">
+              <PsychicText split="words" text={project.title} />
+            </h2>
+            <p className="mt-1 text-sm text-ink/55">
+              <PsychicText split="words" text={project.role} />
+            </p>
           </div>
 
           <p className="text-[15px] leading-relaxed text-ink/80">
@@ -93,13 +86,6 @@ export default function ProjectSheet({ project, onClose }: ProjectSheetProps) {
               </li>
             ))}
           </ul>
-
-          {lead && project.lead && (
-            <p className="border-t border-dashed border-ink/15 pt-3 text-xs italic text-ink/55">
-              <span className="font-pixel text-[8px] not-italic uppercase tracking-wider">{lead.name} leads:</span>{" "}
-              {project.lead.note}
-            </p>
-          )}
         </div>
       )}
     </dialog>
