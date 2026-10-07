@@ -24,7 +24,25 @@ function NeighbourLink({ project, direction }: { project: Project; direction: "p
   );
 }
 
-/** One work project: what it is, what I did, what it's built with — and the way to the next one. */
+/** A "▶" bullet list of rich-text items, used for what I built and what it changed. */
+function BulletList({ items }: { items: string[] }) {
+  return (
+    <ul className="mt-4 space-y-3">
+      {items.map((item) => (
+        <li key={item} className={`flex gap-3 ${BODY_TEXT}`}>
+          <span aria-hidden="true" className="mt-[0.55em] font-pixel text-[7px] leading-none text-accent">
+            ▶
+          </span>
+          <span>
+            <RichText text={item} />
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** One work project: the problem, what I built, what changed, its numbers — and the way to the next one. */
 export default function ProjectPage() {
   const { id } = useParams();
   const index = projects.findIndex((project) => project.id === id);
@@ -58,22 +76,38 @@ export default function ProjectPage() {
             <RichText text={project.summary} />
           </p>
 
-          <h2 className={`mt-10 ${LABEL}`}>What I did</h2>
-          <ul className="mt-4 space-y-3">
-            {project.details.map((item) => (
-              <li key={item} className={`flex gap-3 ${BODY_TEXT}`}>
-                <span aria-hidden="true" className="mt-[0.55em] font-pixel text-[7px] leading-none text-accent">
-                  ▶
-                </span>
-                <span>
-                  <RichText text={item} />
-                </span>
-              </li>
-            ))}
-          </ul>
+          {project.problem && (
+            <>
+              <h2 className={`mt-10 ${LABEL}`}>The problem</h2>
+              <p className={`mt-4 ${BODY_TEXT}`}>
+                <RichText text={project.problem} />
+              </p>
+            </>
+          )}
+
+          <h2 className={`mt-10 ${LABEL}`}>What I built</h2>
+          <BulletList items={project.details} />
+
+          {project.impact && (
+            <>
+              <h2 className={`mt-10 ${LABEL}`}>Impact</h2>
+              <BulletList items={project.impact} />
+            </>
+          )}
         </div>
 
         <aside aria-label="Project facts" className={CARD}>
+          {project.metrics && (
+            <dl className="mb-5 grid grid-cols-2 gap-x-3 gap-y-4 border-b border-dashed border-ink/15 pb-5">
+              {project.metrics.map((metric) => (
+                // dt stays first for the dl's semantics; order-first draws the value above it.
+                <div key={metric.label} className="flex flex-col">
+                  <dt className="text-xs leading-snug text-ink/55">{metric.label}</dt>
+                  <dd className="order-first text-[1.35rem] font-semibold leading-tight text-ink">{metric.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
           <dl className="space-y-4">
             {project.status && (
               <div>
