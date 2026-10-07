@@ -1,86 +1,109 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  siApacheecharts,
+  siGit,
+  siLangchain,
+  siNestjs,
+  siNodedotjs,
+  siPostgresql,
+  siPython,
+  siReact,
+  siReactquery,
+  siRedux,
+  siTailwindcss,
+  siTanstack,
+  siTypescript,
+  siVite,
+  siVitest,
+  type SimpleIcon,
+} from "simple-icons";
 import { featuredSkills } from "../../data/site";
-import { prefersReducedMotion } from "../../hooks/prefersReducedMotion";
-import { ArrowRightIcon } from "./icons";
-import { FOCUS_RING, PIXEL_LABEL } from "./styles";
+import { PIXEL_LABEL } from "./styles";
 
-const ARROW_BUTTON = `grid h-8 w-8 place-items-center pixel-card pixel-card-link text-ink/70 transition disabled:opacity-30 ${FOCUS_RING}`;
+/** Brand logo per skill name in featuredSkills, so each slot reads at a glance. */
+const SKILL_ICONS: Record<string, SimpleIcon> = {
+  React: siReact,
+  TypeScript: siTypescript,
+  "TanStack Start": siTanstack,
+  NestJS: siNestjs,
+  PostgreSQL: siPostgresql,
+  "TanStack Query": siReactquery,
+  "Node.js": siNodedotjs,
+  Python: siPython,
+  Redux: siRedux,
+  ECharts: siApacheecharts,
+  "Tailwind CSS": siTailwindcss,
+  Vite: siVite,
+  Vitest: siVitest,
+  LangChain: siLangchain,
+  Git: siGit,
+};
+
+/** Relative luminance of a brand hex colour, 0 (black) to 1 (white). */
+function luminance(hex: string) {
+  const [r, g, b] = [0, 2, 4].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
 
 /**
- * Main technologies as one row of inventory slots: swipe on phones, arrow
- * buttons on larger screens (the strip itself takes keyboard focus for arrow-key
- * scrolling). The ▶ cursor marks the slot under the pointer, like a Game Boy
- * item menu. Edges fade to hint there is more to scroll.
+ * A skill's logo in its brand colour. Near-black brands switch to the ink
+ * colour at night, near-white ones (TanStack) do so by day, and bright ones
+ * (Vitest) are dimmed by day, so every logo stays visible on the card (see
+ * .skill-icon in index.css).
+ */
+function SkillIcon({ icon }: { icon: SimpleIcon }) {
+  const lum = luminance(icon.hex);
+  const tone = lum < 0.05 ? "skill-icon--dark" : lum > 0.75 ? "skill-icon--pale" : lum > 0.5 ? "skill-icon--bright" : "";
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={`skill-icon ${tone} h-6 w-6 shrink-0`} style={{ color: `#${icon.hex}` }}>
+      <path d={icon.path} fill="currentColor" />
+    </svg>
+  );
+}
+
+/**
+ * Main technologies as one row of inventory slots that scrolls sideways on its
+ * own, forever: the list is rendered twice and the row slides left by exactly
+ * one copy, then starts over (.skills-marquee in index.css). With reduced
+ * motion it stays still and can be swiped instead. The ▶ cursor marks the slot
+ * under the pointer, like a Game Boy item menu.
  */
 export default function SkillsCarousel() {
-  const trackRef = useRef<HTMLUListElement | null>(null);
-  const [edges, setEdges] = useState({ start: true, end: false });
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const update = () =>
-      setEdges({
-        start: track.scrollLeft <= 4,
-        end: track.scrollLeft + track.clientWidth >= track.scrollWidth - 4,
-      });
-    update();
-    track.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      track.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, []);
-
-  const scrollBy = (direction: 1 | -1) => {
-    const track = trackRef.current;
-    if (!track) return;
-    track.scrollBy({ left: direction * track.clientWidth * 0.8, behavior: prefersReducedMotion() ? "auto" : "smooth" });
-  };
-
-  // Fade only the side that has more to scroll, so the first and last slots stay crisp.
-  const fadeStart = edges.start ? "black" : "transparent";
-  const fadeEnd = edges.end ? "black" : "transparent";
-  const mask = `linear-gradient(90deg, ${fadeStart}, black 1.25rem, black calc(100% - 1.25rem), ${fadeEnd})`;
+  const mask = "linear-gradient(90deg, transparent, black 1.25rem, black calc(100% - 1.25rem), transparent)";
 
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <p className={PIXEL_LABEL}>{featuredSkills.length} items · most used first</p>
-        <div className="hidden gap-2 sm:flex">
-          <button type="button" onClick={() => scrollBy(-1)} disabled={edges.start} aria-label="Scroll skills left" className={ARROW_BUTTON}>
-            <ArrowRightIcon className="h-3.5 w-3.5 rotate-180" />
-          </button>
-          <button type="button" onClick={() => scrollBy(1)} disabled={edges.end} aria-label="Scroll skills right" className={ARROW_BUTTON}>
-            <ArrowRightIcon className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
+      <p className={`mb-3 ${PIXEL_LABEL}`}>{featuredSkills.length} items · most used first</p>
 
-      <ul
-        ref={trackRef}
-        tabIndex={0}
-        aria-label="Main technologies"
-        style={{ maskImage: mask, WebkitMaskImage: mask }}
-        className={`no-scrollbar -mx-1 flex snap-x snap-mandatory gap-2.5 overflow-x-auto scroll-px-1 px-1 py-1 sm:gap-3 ${FOCUS_RING}`}
-      >
-        {featuredSkills.map((skill) => (
-          <li
-            key={skill.name}
-            // Sized to content on one line, so a long name never stretches the whole row.
-            className="group pixel-card relative min-w-[8.5rem] shrink-0 snap-start whitespace-nowrap px-3.5 pb-3 pt-2.5"
-          >
-            <span className={`block ${PIXEL_LABEL}`}>{skill.area}</span>
-            <span className="mt-1 flex items-center gap-1.5 text-[0.95rem] font-medium text-ink">
-              <span aria-hidden="true" className="font-pixel text-[8px] text-accent opacity-0 transition group-hover:opacity-100">
-                ▶
-              </span>
-              <span className="-ml-3.5 transition-[margin] group-hover:ml-0">{skill.name}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
+      <div style={{ maskImage: mask, WebkitMaskImage: mask }} className="skills-marquee no-scrollbar -mx-1 overflow-hidden py-1">
+        <ul aria-label="Main technologies" className="skills-marquee__track flex w-max">
+          {[...featuredSkills, ...featuredSkills].map((skill, index) => {
+            const duplicate = index >= featuredSkills.length;
+            return (
+              <li
+                key={`${skill.name}-${duplicate ? "copy" : "main"}`}
+                // The second copy only exists for the loop; screen readers get the list once.
+                aria-hidden={duplicate || undefined}
+                // Spacing is a right margin, not gap, so both copies are the same width and the loop is seamless.
+                className="group pixel-card relative mr-2.5 flex min-w-[8.5rem] shrink-0 items-center gap-3 whitespace-nowrap py-2.5 pl-3.5 pr-4 sm:mr-3"
+              >
+                {SKILL_ICONS[skill.name] && <SkillIcon icon={SKILL_ICONS[skill.name]} />}
+                <span>
+                  <span className={`block ${PIXEL_LABEL}`}>{skill.area}</span>
+                  <span className="mt-1 flex items-center gap-1.5 text-[0.95rem] font-medium text-ink">
+                    <span aria-hidden="true" className="font-pixel text-[8px] text-accent opacity-0 transition group-hover:opacity-100">
+                      ▶
+                    </span>
+                    <span className="-ml-3.5 transition-[margin] group-hover:ml-0">{skill.name}</span>
+                  </span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 }

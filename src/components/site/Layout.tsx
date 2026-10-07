@@ -70,9 +70,6 @@ export default function Layout() {
   const closeToast = useCallback(() => setToast(null), []);
 
   const context: SiteContext = {
-    psyduckRef,
-    phase,
-    aftermath,
     confusion: psychic.blast,
     allShiny,
     copyEmail,
@@ -81,7 +78,7 @@ export default function Layout() {
   return (
     <PsychicContext value={psychic}>
       <div className="flex min-h-screen flex-col bg-paper text-ink">
-        <Header />
+        <Header psyduck={{ spriteRef: psyduckRef, phase, aftermath, onBlast: psychic.blast }} />
         <main id="page-root" className={`${CONTAINER} flex-1 break-words`}>
           <Outlet context={context} />
         </main>

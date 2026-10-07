@@ -12,13 +12,13 @@
 export const profile = {
   name: "Gaurav Bangade",
   role: "Software Engineer",
-  focus: "Product, analytics & SaaS systems",
+  focus: "Full-stack product engineering",
   location: "Pune, India",
   company: "ecoSAIL Infotech",
   /** ISO year-month the current role started. */
   since: "2024-10",
   intro:
-    "I take product features from **requirements and research** through **technical design, development and release** — mostly with React, TypeScript and Django.",
+    "**1,100+ merged PRs** on a maritime SaaS product since 2024. I own **six modules** end to end, designed the **access control** the whole product runs on and cut help-desk polling **10×** — with React, TypeScript and Django.",
 };
 
 export const contact = {
@@ -43,16 +43,16 @@ export const pages = [
 
 /** The résumé page's opening lines. */
 export const resume = {
-  headline: "Software Engineer — Product, Analytics & SaaS Systems",
+  headline: "Full-Stack Software Engineer — React, TypeScript & Django",
   summary:
-    "Software engineer on the early engineering team of a maritime SaaS product since October 2024. I take features from requirements and research through technical design, development, testing and release — across help desk, alerts, reports, user management, vessel and voyage management, analytics and access control. Strongest in React, TypeScript and Django REST Framework; currently building CVMS, a modular offline-first platform.",
+    "Full-stack engineer on the early engineering team of a maritime SaaS product since October 2024, with 1,100+ merged pull requests. I own features from requirements to release — six product modules so far, from help desk and reports to analytics dashboards — and designed the role-based access control the whole product runs on. Cut help-desk polling 10×, fixed 30 critical and high-priority bugs and migrated the frontend to Vite. Now architecting CVMS, a modular, offline-first vessel platform.",
 };
 
 /** The skills carousel on the home page: most relevant first, one area label each. */
 export const featuredSkills: { name: string; area: string }[] = [
   { name: "React", area: "Frontend" },
   { name: "TypeScript", area: "Language" },
-  { name: "Django REST", area: "Backend" },
+  { name: "TanStack Start", area: "Full-stack" },
   { name: "NestJS", area: "Backend" },
   { name: "PostgreSQL", area: "Database" },
   { name: "TanStack Query", area: "Data fetching" },
@@ -95,37 +95,38 @@ export const experience: Experience[] = [
     start: "2024-10",
     end: null,
     summary:
-      "Part of the early engineering team. I gather requirements, research approaches, design and build features end to end, then test and ship them.",
+      "One of the first engineers on the product. I take features from requirements and research through design, build, testing and release — and own six of its modules end to end.",
     metrics: [
-      { value: "1,100+", label: "merged PRs" },
-      { value: "10×", label: "fewer polling requests" },
+      { value: "1,100+", label: "merged pull requests" },
+      { value: "6", label: "product modules owned end to end" },
+      { value: "10×", label: "fewer help-desk polling requests" },
       { value: "30", label: "critical & high-priority bugs fixed" },
     ],
     highlights: [
       {
         label: "Product modules",
-        text: "Built and maintain **Help Desk, Alerts, Reports, User Management, Vessel & Voyage Management** and the data dashboards — each from requirements to release.",
+        text: "Own **six modules** — Help Desk, Alerts, Reports, User Management, Vessel & Voyage Management and the analytics dashboards — each taken from requirements to release and maintained since.",
       },
       {
         label: "Access control",
-        text: "Gathered requirements, researched access models and designed **RBAC**, then implemented it across the app: roles, permission groups, route guards and httpOnly-cookie auth.",
+        text: "Designed and shipped the **RBAC** layer every screen now runs on — roles, permission groups, deny-by-default route guards and **httpOnly-cookie** auth — from requirements and research to rollout.",
       },
       {
         label: "Voyage Simulator & Estimator",
-        text: "Predict a voyage’s **CII ratio and grade** from its parameters — the simulator before a voyage runs, the estimator before it’s even planned.",
+        text: "Built tools that predict a voyage’s **CII ratio and grade** — the simulator before a voyage runs, the estimator before it’s even planned — so operators can check emissions ratings ahead of time.",
       },
       {
         label: "Create React App → Vite",
-        text: "Independently migrated the frontend to **Vite** for faster builds and dev-server startup.",
+        text: "Led the frontend’s move from Create React App to **Vite** on my own initiative, for faster builds and near-instant dev-server startup.",
       },
       {
         label: "Performance",
-        text: "Cut polling requests **10×**, removed redundant API calls and dead code, and cleared **52** effect warnings.",
+        text: "Cut help-desk polling requests **10×**, removed redundant API calls and dead code, cleared **52** React effect warnings and fixed **30** critical and high-priority bugs.",
       },
       {
         label: "CVMS",
         status: "In development",
-        text: "Building a **modular, offline-first** platform where each client deploys only the modules it needs — reporting, crewing, analysis, inventory and more.",
+        text: "Architecting a **modular, offline-first** platform: each vessel runs its own node that syncs with shore, and each client deploys only the modules it buys.",
       },
     ],
   },
@@ -169,7 +170,7 @@ export const projects: Project[] = [
     status: "In development",
     period: "Aug 2026 – now",
     role: "Architecture and core development",
-    blurb: "Coastal Vessel Management System — a modular, offline-first platform where clients deploy only the modules they need.",
+    blurb: "A modular, offline-first vessel platform: every ship runs its own node, and clients deploy only the modules they buy.",
     summary:
       "**CVMS** (Coastal Vessel Management System, a working name) is a **modular, offline-first** platform, currently in development. Each vessel runs its own node that syncs with shore, and each client deploys only the modules it has purchased.",
     details: [
@@ -184,7 +185,7 @@ export const projects: Project[] = [
     id: "voyage-tools",
     title: "Voyage Simulator & Estimator",
     role: "UI and API",
-    blurb: "Predict a voyage’s CII ratio and grade — before it runs, or before it’s even planned.",
+    blurb: "Predict a voyage’s CII emissions grade before it runs — or before it’s even planned.",
     summary:
       "Two planning tools that predict a voyage’s **CII ratio and grade**: the **simulator** from a voyage’s parameters before it runs, and the **estimator** before the voyage is even planned.",
     details: [
@@ -200,7 +201,7 @@ export const projects: Project[] = [
     title: "Role-based access control",
     period: "Feb – Oct 2026",
     role: "Requirements to rollout",
-    blurb: "Researched, designed and built the access model the whole product runs on.",
+    blurb: "The access model every screen runs on — researched, designed and rolled out by me.",
     summary:
       "The permission layer of a **multi-client** product. I gathered the requirements, researched access models, designed the role and permission approach, and rolled it out across the app — so users only see the actions, reports and routes their roles allow.",
     details: [
@@ -215,14 +216,14 @@ export const projects: Project[] = [
     title: "Help Desk",
     period: "Apr – Sep 2026",
     role: "UI and API",
-    blurb: "Support tickets, alerts and real-time notifications between vessels and shore teams.",
+    blurb: "Real-time support between ships and shore that keeps working on weak connections — with 10× fewer polling requests.",
     summary:
       "A **help desk** that connects vessels with shore support teams, with **alerts** and real-time notifications — built to keep working on unreliable connections.",
     details: [
       "Ticket lifecycle with comments, attachments, linked tickets, filters and auto-assign.",
       "**Real-time notifications** over WebSockets, and an API-to-API bridge that keeps two applications in sync.",
       "Queued actions with **retries and background reconciliation** for unstable vessel connectivity.",
-      "Cut the help desk’s polling requests **10×**.",
+      "Cut the help desk’s polling requests **10×** by moving updates to real-time notifications.",
     ],
     stack: ["React", "TypeScript", "Django", "WebSockets"],
   },
@@ -231,7 +232,7 @@ export const projects: Project[] = [
     title: "Data dashboards",
     period: "2025 – now",
     role: "Frontend",
-    blurb: "Engine, hull, fuel and emissions analytics built on one shared data layer.",
+    blurb: "Engine, hull, fuel and emissions analytics — new views plug into one shared data layer.",
     summary:
       "Dashboards that turn vessel reports into **operational and compliance insight**: engine and hull performance, fuel, lube oil, emissions and fleet KPIs.",
     details: [
@@ -246,8 +247,8 @@ export const projects: Project[] = [
     title: "Reports",
     period: "Nov 2024 – now",
     role: "Frontend",
-    blurb: "Multi-step report workflows that survive partial saves, edits and revisits.",
-    summary: "The **multi-step report wizards** used on board, covering fuel, lube oil, bunkering, fresh water and running hours.",
+    blurb: "Five on-board report wizards that never lose work — partial saves, edits and revisits included.",
+    summary: "The **multi-step report wizards** crews fill in on board — **five report types** covering fuel, lube oil, bunkering, fresh water and running hours.",
     details: [
       "Reliable **partial saves, revisit and edit flows**, dynamic tabs and save-change confirmations.",
       "Shared form patterns with **Formik and Yup**, and consistent server-error handling.",
@@ -268,17 +269,17 @@ export type PersonalProject = {
 export const personalProjects: PersonalProject[] = [
   {
     title: "InquireAI",
-    description: "Chat with your documents: PDFs go into a vector store and questions get semantic answers.",
+    description: "Ask questions of your PDFs in plain language: a RAG pipeline over a FAISS vector store returns answers grounded in the documents.",
     stack: ["Python", "LangChain", "FAISS", "Streamlit", "MongoDB"],
   },
   {
     title: "Artisan Studio",
-    description: "An e-commerce platform for artisans, with profiles, product uploads, reviews and messaging.",
+    description: "A full-stack marketplace for artisans — profiles, product uploads, reviews and buyer messaging.",
     stack: ["React", "Node.js", "Express", "MongoDB", "Cloudinary"],
   },
   {
     title: "JSON Toolkit",
-    description: "Format, validate and visualise JSON as an interactive graph. It lives on this site.",
+    description: "Format, validate and explore JSON as an interactive graph — built for this site, and you can use it now.",
     stack: ["React", "TypeScript", "React Flow"],
     to: "/json-toolkit",
   },
