@@ -75,30 +75,83 @@ function particle({ x, y, text, size, width, height, color, keyframes, duration,
 /** Keyframe transforms keep the particle centred on its (left, top) point. */
 const at = (dx: number, dy: number, extra = "") => `translate(-50%, -50%) translate(${dx}px, ${dy}px) ${extra}`;
 
+/** A full-screen layer (tint, vignette or flash) that fades through `opacities` and removes itself. */
+function screenWash(background: string, opacities: number[], duration: number, delay = 0) {
+  const show = () => {
+    const wash = document.createElement("span");
+    wash.className = "fx-flash";
+    wash.style.background = background;
+    fxLayer().append(wash);
+    const fade = wash.animate(
+      opacities.map((opacity) => ({ opacity })),
+      { duration, easing: "ease-out", fill: "both" },
+    );
+    fade.onfinish = fade.oncancel = () => wash.remove();
+  };
+  // A tint with no delay goes in now, beneath the particles added after it; a
+  // delayed flash goes in only when it starts, on top, so it can't show early.
+  if (delay > 0) window.setTimeout(show, delay);
+  else show();
+}
+
+/** Shakes the page content; `strength` is the first swing in px. */
+function shakePage(strength: number, duration: number, delay = 0) {
+  const s = strength;
+  document.getElementById("page-root")?.animate(
+    [0, -s, s, -s * 0.75, s * 0.75, -s * 0.4, s * 0.4, 0].map((d) => ({ transform: `translate(${d}px, ${d / 2}px)` })),
+    { duration, delay },
+  );
+}
+
 function darkestLariat({ sprite }: MoveContext) {
   sprite?.animate([{ transform: "rotate(0)" }, { transform: "rotate(-720deg)" }], {
     duration: 800,
     easing: "cubic-bezier(.5,0,.3,1)",
   });
-  const { x, y } = originOf(sprite);
-  for (let i = 0; i < 32; i++) {
-    const dx = random(-160, 160);
-    const rise = random(60, 200);
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  // The arena heats up: a dark-red vignette closes in from every edge.
+  screenWash("radial-gradient(ellipse at center, transparent 30%, rgba(140, 20, 0, 0.6) 100%)", [0, 1, 1, 0], 1800);
+
+  // A wall of flame rising along the whole bottom of the screen...
+  for (let i = 0; i < 110; i++) {
+    const rise = random(height * 0.25, height * 0.85);
     particle({
-      x,
-      y,
-      size: random(5, 11),
+      x: random(-20, width + 20),
+      y: height + 20,
+      size: random(8, 20),
       color: pick(["#ff6b1a", "#ffb02e", "#e3350d", "#ffd36b"]),
       keyframes: [
-        { transform: at(0, 0, "scale(1)"), opacity: 1 },
-        { transform: at(dx * 0.7, -rise * 0.6, "scale(.8)"), opacity: 1, offset: 0.5 },
-        { transform: at(dx, -rise, "scale(.2)"), opacity: 0 },
+        { transform: at(0, 0, "scale(1)"), opacity: 0.95 },
+        { transform: at(random(-40, 40), -rise * 0.6, "scale(.8)"), opacity: 0.9, offset: 0.5 },
+        { transform: at(random(-80, 80), -rise, "scale(.2)"), opacity: 0 },
       ],
-      duration: random(700, 1200),
-      delay: random(150, 450),
+      duration: random(900, 1500),
+      delay: random(100, 700),
     });
   }
-  return 1700;
+  // ...and embers drifting up all over it.
+  for (let i = 0; i < 45; i++) {
+    particle({
+      x: random(0, width),
+      y: random(height * 0.2, height),
+      size: random(3, 6),
+      color: pick(["#ffd36b", "#ffb02e"]),
+      keyframes: [
+        { transform: at(0, 0), opacity: 0 },
+        { transform: at(random(-30, 30), -60), opacity: 1, offset: 0.3 },
+        { transform: at(random(-60, 60), -random(140, 260)), opacity: 0 },
+      ],
+      duration: random(1000, 1600),
+      delay: random(200, 800),
+    });
+  }
+
+  // The lariat lands: an orange flash and the whole page shakes.
+  screenWash("#ff8a3d", [0.4, 0], 450, 650);
+  shakePage(9, 450, 650);
+  return 1900;
 }
 
 /** Sand reads against the page: dark grains on the light theme, pale ones at night. */
@@ -190,30 +243,99 @@ function nightShade({ sprite }: MoveContext) {
   return 1000;
 }
 
-function fairyWind({ sprite }: MoveContext) {
-  const { x, y } = originOf(sprite);
-  for (let i = 0; i < 26; i++) {
-    const sway = random(30, 70) * (Math.random() < 0.5 ? -1 : 1);
-    const rise = random(160, 320);
+function moonblast({ sprite }: MoveContext) {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const moonSize = Math.min(width, height) * 0.2;
+  const mx = width / 2;
+  const my = height * 0.26;
+  const duration = 2900;
+
+  // Night falls over the whole screen while the moon gathers power.
+  screenWash("linear-gradient(180deg, rgba(28, 10, 48, 0.62), rgba(70, 20, 70, 0.42))", [0, 1, 1, 0], duration);
+  sprite?.animate(
+    [{ transform: "scale(1)" }, { transform: "scale(1.15) translateY(-6px)" }, { transform: "scale(1)" }],
+    { duration: 900, easing: "ease-in-out" },
+  );
+
+  // Stars twinkle everywhere.
+  for (let i = 0; i < 70; i++) {
     particle({
-      x: x + random(-30, 30),
-      y,
-      text: pick(["♥", "♥", "✦", "❀"]),
-      size: random(12, 22),
-      color: pick(["#f4a6c8", "#e86aa6", "#8fd3f4", "#ffffff"]),
+      x: random(0, width),
+      y: random(0, height),
+      text: pick(["✦", "✧", "·"]),
+      size: random(8, 18),
+      color: pick(["#ffffff", "#ffe3f1", "#fbc4e0"]),
       keyframes: [
-        { transform: at(0, 0, "rotate(0) scale(.4)"), opacity: 0 },
-        { transform: at(sway, -rise * 0.33, "rotate(-15deg) scale(1)"), opacity: 1, offset: 0.25 },
-        { transform: at(-sway, -rise * 0.66, "rotate(15deg) scale(1)"), opacity: 1, offset: 0.65 },
-        { transform: at(sway * 0.5, -rise, "rotate(0) scale(.8)"), opacity: 0 },
+        { transform: at(0, 0, "scale(0)"), opacity: 0 },
+        { transform: at(0, 0, "scale(1)"), opacity: 1, offset: 0.3 },
+        { transform: at(0, 0, "scale(.6)"), opacity: 0.6, offset: 0.6 },
+        { transform: at(0, 0, "scale(1.1)"), opacity: 1, offset: 0.8 },
+        { transform: at(0, 0, "scale(0)"), opacity: 0 },
       ],
-      duration: random(1500, 2200),
-      delay: random(0, 500),
+      duration: random(1600, 2400),
+      delay: random(0, 600),
       easing: "ease-in-out",
     });
   }
-  sprite?.animate([{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }], { duration: 500 });
-  return 2600;
+
+  // The moon rises, glows brighter as it charges, then fires.
+  const moon = document.createElement("span");
+  moon.className = "fx-moon";
+  Object.assign(moon.style, { left: `${mx}px`, top: `${my}px`, width: `${moonSize}px`, height: `${moonSize}px` });
+  fxLayer().append(moon);
+  const rise = moon.animate(
+    [
+      { transform: "translate(-50%, 40%) scale(.3)", opacity: 0 },
+      { transform: "translate(-50%, -50%) scale(1)", opacity: 1, offset: 0.3 },
+      { transform: "translate(-50%, -50%) scale(1.08)", opacity: 1, filter: "brightness(1.5)", offset: 0.5 },
+      { transform: "translate(-50%, -50%) scale(.9)", opacity: 1, offset: 0.56 },
+      { transform: "translate(-50%, -50%) scale(1.4)", opacity: 0 },
+    ],
+    { duration: 2300, easing: "ease-in-out", fill: "both" },
+  );
+  rise.onfinish = rise.oncancel = () => moon.remove();
+
+  // The blast: a pink shockwave rolls out from the moon over the entire screen...
+  const fire = 1250;
+  const reach = Math.hypot(width, height) * 2.2;
+  particle({
+    x: mx,
+    y: my,
+    size: 40,
+    color: "radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 150, 205, 0.7) 45%, rgba(255, 150, 205, 0) 70%)",
+    keyframes: [
+      { transform: at(0, 0, "scale(0)"), opacity: 1 },
+      { transform: at(0, 0, `scale(${reach / 40})`), opacity: 0 },
+    ],
+    duration: 1000,
+    delay: fire,
+    easing: "cubic-bezier(.2,.6,.3,1)",
+  });
+  // ...sparkles fly to every edge...
+  for (let i = 0; i < 48; i++) {
+    const angle = (i / 48) * Math.PI * 2 + random(-0.1, 0.1);
+    const distance = reach / 2;
+    particle({
+      x: mx,
+      y: my,
+      text: pick(["✦", "♥", "✦", "❀"]),
+      size: random(14, 26),
+      color: pick(["#ffffff", "#f4a6c8", "#e86aa6", "#ffd1e8"]),
+      keyframes: [
+        { transform: at(0, 0, "scale(.4)"), opacity: 0 },
+        { transform: at(0, 0, "scale(.6)"), opacity: 1, offset: 0.04 },
+        { transform: at(Math.cos(angle) * distance, Math.sin(angle) * distance, "scale(1.2) rotate(180deg)"), opacity: 0 },
+      ],
+      duration: random(900, 1300),
+      delay: fire + random(0, 120),
+      easing: "cubic-bezier(.2,.6,.4,1)",
+    });
+  }
+  // ...then a pink flash and the page shakes.
+  screenWash("#ffc2e1", [0.75, 0], 600, fire + 80);
+  shakePage(8, 480, fire + 80);
+  return duration;
 }
 
 function braveBird({ sprite }: MoveContext) {
@@ -303,30 +425,53 @@ function braveBird({ sprite }: MoveContext) {
 }
 
 function matchaGotcha({ sprite }: MoveContext) {
-  const { x, y } = originOf(sprite);
+  const width = window.innerWidth;
+  const height = window.innerHeight;
   sprite?.animate(
     [-12, 12, -8, 8, 0].map((deg) => ({ transform: `rotate(${deg}deg)` })),
     { duration: 600, easing: "ease-in-out" },
   );
-  for (let i = 0; i < 30; i++) {
-    const dx = random(-180, 180);
-    const peak = random(80, 220);
+
+  // The whole screen steeps green...
+  screenWash("rgba(110, 160, 60, 0.28)", [0, 1, 1, 0], 2300, 150);
+  // ...while matcha pours down across every part of it.
+  for (let i = 0; i < 150; i++) {
+    const drop = i < 110;
+    const fall = height + 80;
     particle({
-      x,
-      y,
+      x: random(-10, width + 10),
+      y: -30,
       size: random(5, 10),
+      ...(drop ? { width: random(3, 6), height: random(10, 20) } : {}),
       color: pick(["#7fb24a", "#a6cf6b", "#5a8a32", "#d9ecb1"]),
       keyframes: [
-        { transform: at(0, 0), opacity: 1 },
-        { transform: at(dx * 0.5, -peak), opacity: 1, offset: 0.4 },
-        { transform: at(dx, random(60, 160)), opacity: 0 },
+        { transform: at(0, 0), opacity: 0 },
+        { transform: at(random(-10, 10), fall * 0.15), opacity: 0.95, offset: 0.12 },
+        { transform: at(random(-30, 30), fall), opacity: 0.85 },
       ],
-      duration: random(1000, 1500),
-      delay: random(200, 450),
-      easing: "cubic-bezier(.25,.6,.6,1)",
+      duration: random(900, 1500),
+      delay: random(150, 1100),
+      easing: "cubic-bezier(.5,0,.9,.6)",
     });
   }
-  return 2000;
+  // Foam bubbles rising from the bottom as the bowl fills.
+  for (let i = 0; i < 40; i++) {
+    particle({
+      x: random(0, width),
+      y: height + 10,
+      text: "○",
+      size: random(10, 18),
+      color: "#eaf6d3",
+      keyframes: [
+        { transform: at(0, 0, "scale(.6)"), opacity: 0 },
+        { transform: at(random(-20, 20), -random(80, 220), "scale(1)"), opacity: 0.9, offset: 0.6 },
+        { transform: at(random(-30, 30), -random(240, 360), "scale(1.2)"), opacity: 0 },
+      ],
+      duration: random(1200, 1700),
+      delay: random(700, 1300),
+    });
+  }
+  return 2600;
 }
 
 const MOVES: Record<MoveId, (ctx: MoveContext) => number> = {
@@ -337,7 +482,7 @@ const MOVES: Record<MoveId, (ctx: MoveContext) => number> = {
   },
   "sand-stream": sandStream,
   "night-shade": nightShade,
-  "fairy-wind": fairyWind,
+  moonblast,
   "brave-bird": braveBird,
   "matcha-gotcha": matchaGotcha,
 };
