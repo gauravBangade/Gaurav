@@ -10,7 +10,7 @@ export type PokemonType =
 export type PokemonId = "incineroar" | "psyduck" | "tyranitar" | "gengar" | "sylveon" | "skarmory" | "sinistcha";
 
 /** Each move maps to an effect in src/pokemon/moves.ts. */
-export type MoveId = "darkest-lariat" | "confusion" | "sand-stream" | "night-shade" | "fairy-wind" | "brave-bird" | "matcha-gotcha";
+export type MoveId = "darkest-lariat" | "confusion" | "sand-stream" | "night-shade" | "moonblast" | "brave-bird" | "matcha-gotcha";
 
 export type PartyMember = {
   id: PokemonId;
@@ -67,9 +67,9 @@ export const party: PartyMember[] = [
     name: "Sylveon",
     types: ["fairy"],
     ability: "Pixilate",
-    move: { id: "fairy-wind", name: "Fairy Wind" },
+    move: { id: "moonblast", name: "Moonblast" },
     dex: "Wraps its ribbon feelers around the people it trusts. Proof that the softest-looking member of the team can hit the hardest.",
-    aftermath: "It’s super effective!",
+    aftermath: "It’s super effective! The foe’s Sp. Atk fell!",
   },
   {
     id: "skarmory",
