@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
 import PsychicText from "../components/PsychicText";
-import RichText from "../components/RichText";
-import PokeballIcon from "../components/site/PokeballIcon";
-import PsyduckHero from "../components/site/PsyduckHero";
 import { StatusLabel, WorkProjectGrid } from "../components/site/ProjectList";
 import { Section } from "../components/site/Section";
 import SkillsCarousel from "../components/site/SkillsCarousel";
-import { useSite } from "../components/site/siteContext";
-import { ArrowRightIcon, GitHubIcon, LinkedInIcon, MailIcon } from "../components/site/icons";
+import TrainerCardHero from "../components/site/TrainerCardHero";
+import { ArrowRightIcon, MailIcon } from "../components/site/icons";
 import {
   BODY_TEXT,
   BUTTON_PRIMARY,
@@ -18,10 +15,9 @@ import {
   LINK_CLASS,
   PIXEL_LABEL,
   PROSE,
-  TITLE,
   formatMonth,
 } from "../components/site/styles";
-import { contact, education, experience, profile, projects, spokenLanguages } from "../data/site";
+import { contact, education, experience, projects, spokenLanguages } from "../data/site";
 import { party, spriteSrc } from "../data/party";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
@@ -34,95 +30,6 @@ function SectionLink({ to, children }: { to: string; children: string }) {
       {children}
       <ArrowRightIcon className="h-3.5 w-3.5" />
     </Link>
-  );
-}
-
-/** Quick facts, laid out like a Game Boy trainer card. */
-function TrainerCard() {
-  const rows: [string, string][] = [
-    ["Role", profile.role],
-    ["Company", profile.company],
-    ["Based in", profile.location],
-    ["Since", formatMonth(profile.since)],
-    ["Speaks", spokenLanguages.join(", ")],
-  ];
-  const social = [
-    { label: "GitHub", href: contact.github, Icon: GitHubIcon, external: true },
-    { label: "LinkedIn", href: contact.linkedin, Icon: LinkedInIcon, external: true },
-    { label: "Email", href: `mailto:${contact.email}`, Icon: MailIcon, external: false },
-  ];
-
-  return (
-    <aside aria-label="Quick facts" className={`${CARD} lg:self-start`}>
-      <div className="flex items-center justify-between">
-        <span className={`${PIXEL_LABEL} !text-accent`}>Trainer card</span>
-        <PokeballIcon className="h-4 w-4 text-ink/70" />
-      </div>
-      <dl className="mt-4 grid grid-cols-[5.5rem_1fr] gap-x-3 gap-y-2.5">
-        {rows.map(([label, value]) => (
-          <div key={label} className="contents">
-            <dt className={`${PIXEL_LABEL} pt-[0.3rem]`}>{label}</dt>
-            <dd className="text-[0.94rem] text-ink/85">
-              <PsychicText split="words" text={value} />
-            </dd>
-          </div>
-        ))}
-      </dl>
-      <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-dashed border-ink/15 pt-4">
-        {social.map(({ label, href, Icon, external }) => (
-          <li key={label}>
-            <a
-              href={href}
-              {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-              className={`flex items-center gap-1.5 rounded text-sm text-ink/65 transition hover:text-ink ${FOCUS_RING}`}
-            >
-              <Icon />
-              {label}
-              {external && <span className="sr-only"> (opens in a new tab)</span>}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </aside>
-  );
-}
-
-function Hero() {
-  const { psyduckRef, phase, aftermath, confusion } = useSite();
-
-  return (
-    <section
-      aria-label="Introduction"
-      className={`grid items-start pt-[clamp(1.75rem,1rem+3vw,3.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] ${GAP} lg:gap-12`}
-    >
-      <div>
-        <PsyduckHero spriteRef={psyduckRef} phase={phase} aftermath={aftermath} onBlast={confusion} />
-        <h1 tabIndex={-1} className={`mt-5 ${TITLE} focus:outline-none`}>
-          <PsychicText split="words" text={profile.name} />
-        </h1>
-        <p className="mt-3 text-[clamp(1.05rem,0.95rem+0.45vw,1.3rem)] text-ink/80">
-          <span className="font-medium text-accent">
-            <PsychicText split="words" text={profile.role} />
-          </span>{" "}
-          <span aria-hidden="true" className="text-ink/25">
-            ·
-          </span>{" "}
-          <PsychicText split="words" text={profile.focus} />
-        </p>
-        <p className={`mt-4 ${PROSE} ${BODY_TEXT}`}>
-          <RichText text={profile.intro} />
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link to="/contact" className={BUTTON_PRIMARY}>
-            Get in touch
-          </Link>
-          <Link to="/resume" className={BUTTON_SECONDARY}>
-            View resume
-          </Link>
-        </div>
-      </div>
-      <TrainerCard />
-    </section>
   );
 }
 
@@ -152,7 +59,7 @@ function ExperienceCard() {
         <PsychicText split="words" text={job.summary} />
       </p>
 
-      <dl className="mt-5 grid grid-cols-3 gap-3">
+      <dl className="mt-5 grid grid-cols-2 gap-x-3 gap-y-4 sm:grid-cols-4">
         {job.metrics.map((metric) => (
           // dt stays first for the dl's semantics; order-first draws the value above it, top-aligned.
           <div key={metric.label} className="flex flex-col border-l-2 border-dotted border-ink/20 pl-3">
@@ -266,7 +173,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Hero />
+      <TrainerCardHero />
 
       <Section id="skills" title="Skills">
         <SkillsCarousel />

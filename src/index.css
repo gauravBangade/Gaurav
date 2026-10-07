@@ -86,6 +86,153 @@
         --dot: rgb(var(--accent) / 0.8);
     }
 
+    /* Trainer card (home hero): a Gen 2–style card — thick rounded frame with
+       an inner keyline, a red title bar, cream face and a hard pixel shadow. */
+    .trainer-card {
+        --tc-frame: 32 36 56;
+        --tc-face: 250 244 226;
+        --tc-label: 52 70 150;
+        --tc-line: 32 36 56;
+        --tc-bar: var(--accent);
+        color: rgb(var(--ink));
+        background: rgb(var(--tc-face));
+        border: 4px solid rgb(var(--tc-frame));
+        border-radius: 12px;
+        box-shadow:
+            inset 0 0 0 3px rgb(var(--tc-face)),
+            inset 0 0 0 5px rgb(var(--tc-frame) / 0.85),
+            6px 6px 0 rgb(var(--tc-frame) / 0.18);
+        padding: 5px;
+        overflow: hidden;
+    }
+
+    :root[data-theme="dark"] .trainer-card {
+        --tc-frame: 8 8 14;
+        --tc-face: 30 29 44;
+        --tc-label: 150 170 255;
+        --tc-line: 236 234 242;
+        --tc-bar: 186 52 42;
+        box-shadow:
+            inset 0 0 0 3px rgb(var(--tc-face)),
+            inset 0 0 0 5px rgb(var(--tc-line) / 0.35),
+            6px 6px 0 rgb(0 0 0 / 0.45);
+    }
+
+    .trainer-card__bar {
+        color: #fff;
+        background: rgb(var(--tc-bar));
+        border-radius: 6px 6px 0 0;
+        border-bottom: 3px solid rgb(var(--tc-frame));
+    }
+
+    /* Artwork window, like the illustration box on a TCG card. */
+    .trainer-card__art {
+        /* A soft ground shadow under the trainer's feet on a light tint. */
+        background:
+            radial-gradient(ellipse 34% 3.5% at 50% 94%, rgb(var(--tc-frame) / 0.28) 0 98%, transparent 100%),
+            linear-gradient(180deg, rgb(var(--tc-label) / 0.1), rgb(var(--tc-label) / 0.03));
+        border: 3px solid rgb(var(--tc-frame));
+        border-radius: 4px;
+        box-shadow: inset 0 0 0 2px rgb(var(--tc-face));
+        padding: 0.75rem 0 1rem;
+    }
+
+    .trainer-card__row > * {
+        border-bottom: 2px dotted rgb(var(--tc-line) / 0.18);
+    }
+
+    .trainer-card__stat {
+        background: rgb(var(--tc-line) / 0.05);
+        border: 2px solid rgb(var(--tc-line) / 0.2);
+        border-radius: 4px;
+    }
+
+    .trainer-card__intro {
+        font-size: 10px;
+        line-height: 2.1;
+    }
+
+    /* The dialog box stays white in both themes, so keywords keep its ink. */
+    .trainer-card__intro .text-ink {
+        color: inherit;
+    }
+
+    /* Bottom strip, like a TCG card's weakness / resistance / retreat row. */
+    .trainer-card__links {
+        border-top: 3px solid rgb(var(--tc-frame));
+        background: rgb(var(--tc-line) / 0.04);
+        border-radius: 0 0 6px 6px;
+    }
+
+    .trainer-card__link {
+        color: rgb(var(--ink) / 0.8);
+        transition: background-color 120ms steps(2), color 120ms steps(2);
+    }
+
+    .trainer-card__link:hover,
+    .trainer-card__link:focus-visible {
+        color: #fff;
+        background: rgb(var(--tc-bar));
+    }
+
+    .trainer-card__link + .trainer-card__link {
+        border-left: 2px dotted rgb(var(--tc-line) / 0.25);
+    }
+
+    /* Two columns on phones: the third link starts a new row, so no divider on it. */
+    @media (max-width: 639px) {
+        .trainer-card__link:nth-child(3) {
+            border-left: 0;
+        }
+
+        .trainer-card__link:nth-child(n + 3) {
+            border-top: 2px dotted rgb(var(--tc-line) / 0.25);
+        }
+    }
+
+    /* Skills strip: slides left by one copy of the (doubled) list, then loops.
+       About 2.5s per slot keeps each one readable as it passes. */
+    .skills-marquee {
+        padding-inline: 0.25rem;
+    }
+
+    .skills-marquee__track {
+        animation: skills-marquee 40s linear infinite;
+    }
+
+    @keyframes skills-marquee {
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .skills-marquee {
+            overflow-x: auto;
+        }
+
+        .skills-marquee__track {
+            animation: none;
+        }
+    }
+
+    /* Skill logos keep their brand colour unless it would vanish on the card. */
+    .skill-icon--bright {
+        filter: brightness(0.78) saturate(1.2);
+    }
+
+    :root[data-theme="dark"] .skill-icon--bright {
+        filter: none;
+    }
+
+    :root:not([data-theme="dark"]) .skill-icon--pale {
+        color: rgb(var(--ink)) !important;
+    }
+
+    :root[data-theme="dark"] .skill-icon--dark {
+        color: rgb(var(--ink)) !important;
+    }
+
     /* Horizontal scrollers that rely on swipe/arrows instead of a scrollbar. */
     .no-scrollbar {
         scrollbar-width: none;
