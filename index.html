@@ -36,8 +36,164 @@
         if (theme === "dark") document.querySelector('meta[name="theme-color"]').content = "#121118";
       })();
     </script>
+    <style>
+      /* Pokéball intro: drops in, wobbles, bursts open to reveal the site. Inline so
+         it is on screen at first paint, before the app's CSS and JS load. */
+      .intro {
+        --s: clamp(96px, 24vw, 150px);
+        --line: calc(var(--s) * 0.05);
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: #fbfaf8;
+        cursor: pointer;
+        animation: intro-out 0.45s ease-in 1.35s forwards;
+      }
+      :root[data-theme="dark"] .intro {
+        background: #121118;
+      }
+      .intro--skip {
+        animation: intro-out 0.2s ease-in forwards;
+      }
+      .intro__drop {
+        animation: intro-drop 0.55s cubic-bezier(0.3, 0, 0.5, 1) both;
+      }
+      .intro__ball {
+        position: relative;
+        width: var(--s);
+        height: var(--s);
+        transform-origin: 50% 100%;
+        animation: intro-wobble 0.7s ease-in-out 0.55s both;
+      }
+      .intro__top,
+      .intro__bottom {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        box-sizing: border-box;
+        border: var(--line) solid #1a1a1a;
+      }
+      .intro__top {
+        top: 0;
+        background: #e3350d;
+        border-bottom-width: calc(var(--line) * 0.9);
+        border-radius: var(--s) var(--s) 0 0;
+        box-shadow: inset calc(var(--s) * -0.06) calc(var(--s) * 0.05) 0 rgba(0, 0, 0, 0.15);
+        animation: intro-top 0.5s cubic-bezier(0.5, 0, 0.75, 0) 1.3s forwards;
+      }
+      .intro__bottom {
+        bottom: 0;
+        background: #fff;
+        border-top-width: calc(var(--line) * 0.9);
+        border-radius: 0 0 var(--s) var(--s);
+        box-shadow: inset calc(var(--s) * -0.06) calc(var(--s) * -0.05) 0 rgba(0, 0, 0, 0.1);
+        animation: intro-bottom 0.5s cubic-bezier(0.5, 0, 0.75, 0) 1.3s forwards;
+      }
+      .intro__button {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        width: 30%;
+        height: 30%;
+        box-sizing: border-box;
+        border: var(--line) solid #1a1a1a;
+        border-radius: 50%;
+        background: #fff;
+        transform: translate(-50%, -50%);
+        animation:
+          intro-glow 1.3s steps(1) both,
+          intro-pop 0.35s ease-out 1.3s forwards;
+      }
+      .intro__flash {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: var(--s);
+        height: var(--s);
+        border-radius: 50%;
+        background: radial-gradient(circle, #fff 0 35%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 70%);
+        transform: translate(-50%, -50%) scale(0);
+        animation: intro-flash 0.6s ease-out 1.25s forwards;
+      }
+      @keyframes intro-drop {
+        0% { transform: translateY(-75vh); }
+        55% { transform: translateY(0); }
+        72% { transform: translateY(-14%); }
+        86% { transform: translateY(0); }
+        94% { transform: translateY(-4%); }
+        100% { transform: translateY(0); }
+      }
+      @keyframes intro-wobble {
+        0%, 100% { transform: rotate(0); }
+        20% { transform: rotate(-14deg); }
+        42% { transform: rotate(12deg); }
+        62% { transform: rotate(-7deg); }
+        82% { transform: rotate(4deg); }
+      }
+      /* The button lights up just before the ball opens, like a catch in reverse. */
+      @keyframes intro-glow {
+        0% { background: #fff; }
+        85%, 100% { background: #fff6b8; box-shadow: 0 0 calc(var(--s) * 0.15) calc(var(--s) * 0.05) rgba(255, 236, 140, 0.95); }
+      }
+      @keyframes intro-pop {
+        to { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+      }
+      @keyframes intro-top {
+        to { transform: translateY(-60vh) rotate(-24deg); opacity: 0; }
+      }
+      @keyframes intro-bottom {
+        to { transform: translateY(60vh) rotate(16deg); opacity: 0; }
+      }
+      @keyframes intro-flash {
+        0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(14); opacity: 0; }
+      }
+      @keyframes intro-out {
+        to { opacity: 0; visibility: hidden; }
+      }
+      @media (prefers-reduced-motion: reduce), print {
+        .intro { display: none; }
+      }
+    </style>
   </head>
   <body>
+    <!-- Decorative: hidden from screen readers; click to skip. -->
+    <div id="intro" class="intro" aria-hidden="true">
+      <div class="intro__drop">
+        <div class="intro__ball">
+          <div class="intro__top"></div>
+          <div class="intro__bottom"></div>
+          <div class="intro__button"></div>
+        </div>
+      </div>
+      <div class="intro__flash"></div>
+    </div>
+    <script>
+      // Once per browser session, and never under reduced motion.
+      (function () {
+        var intro = document.getElementById("intro");
+        try {
+          if (sessionStorage.getItem("intro-seen") || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            intro.remove();
+            return;
+          }
+          sessionStorage.setItem("intro-seen", "1");
+        } catch (e) {}
+        var done = function () {
+          intro.remove();
+        };
+        intro.addEventListener("click", function () {
+          intro.classList.add("intro--skip");
+          setTimeout(done, 220);
+        });
+        setTimeout(done, 1900);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
