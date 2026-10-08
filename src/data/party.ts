@@ -91,7 +91,7 @@ export const boxed: PartyMember = {
   ability: "Hospitality",
   move: { id: "matcha-gotcha", name: "Matcha Gotcha" },
   dex: "A matcha ghost haunting an old tea bowl. It isn’t in the party, but it’s always brewing.",
-  aftermath: "A bowl of matcha was poured. Is it the real thing...?",
+  aftermath: "Gotcha! That matcha was a counterfeit all along.",
 };
 
 export const spriteSrc = (id: PokemonId, shiny = false) => `/pokemon/${id}${shiny ? "-shiny" : ""}.png`;
