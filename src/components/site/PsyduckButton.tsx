@@ -1,4 +1,5 @@
 import { useState, type RefObject } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import PokemonDialog from "../PokemonDialog";
 import type { PsychicPhase } from "../../hooks/usePsychicBlast";
 import { FOCUS_RING } from "./styles";
@@ -20,11 +21,20 @@ type PsyduckButtonProps = {
 
 /**
  * Psyduck in the header, beside the name. It stays still and quiet until you
- * hover or focus it (then it stares back); click it and it uses Confusion on
- * the page. Its text box drops down below the header.
+ * hover or focus it (then it stares back); click it and it takes you home and
+ * uses Confusion there. Its text box drops down below the header.
  */
 export default function PsyduckButton({ spriteRef, phase, aftermath, onBlast }: PsyduckButtonProps) {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const onClick = () => {
+    if (pathname === "/") return onBlast();
+    navigate("/");
+    // Let the home page render first, so its text joins the blast.
+    window.setTimeout(onBlast, 150);
+  };
 
   const dialogLine =
     phase === "charge"
@@ -41,12 +51,12 @@ export default function PsyduckButton({ spriteRef, phase, aftermath, onBlast }: 
     <div className="relative shrink-0">
       <button
         type="button"
-        onClick={onBlast}
+        onClick={onClick}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
         onFocus={() => setHovered(true)}
         onBlur={() => setHovered(false)}
-        aria-label="Psyduck uses Confusion"
+        aria-label="Home — Psyduck uses Confusion"
         aria-describedby="psyduck-dialog"
         className={`grid h-8 w-8 cursor-pointer select-none place-items-center rounded-full border border-ink/10 bg-card transition hover:border-ink/30 sm:h-9 sm:w-9 ${FOCUS_RING}`}
       >
