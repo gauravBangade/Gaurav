@@ -45,6 +45,8 @@ export const pages = [
 
 /** The résumé page's opening lines. */
 export const resume = {
+  /** One-page, ATS-friendly copy in public/. Regenerate it when the content below changes. */
+  pdf: "/Gaurav-Bangade-Resume.pdf",
   headline: "Software Engineer — Platform Architecture, Full-Stack & Offline-First Systems",
   summary:
     "Software engineer at a maritime SaaS company since November 2024, with ~1,300 commits and ~1,180 pull requests across 15+ repositories. Founded and architected CVMS, a plugin-based, offline-first ship–shore platform with a transactional-outbox sync foundation and a network-fault simulation arena, and created Ensign, the design system it is built on. One of the main frontend authors of Ecosailer, the production emissions-compliance product: built the Voyage Estimator, rebuilt role-based access control, moved auth to httpOnly cookies, cut polling 10×, removed every “any” type and closed 30 release-blocking defects for 2.4.0. Built the UI and helpdesk of Ecosail Global, the shore hub, from scratch.",
@@ -404,18 +406,20 @@ export const personalProjects: PersonalProject[] = [
   },
 ];
 
-export type Education = { degree: string; school: string; detail: string };
+export type Education = { degree: string; school: string; detail: string; year: string };
 
 export const education: Education[] = [
   {
     degree: "Master of Computer Applications (MCA)",
     school: "MES’ Institute of Management & Career Courses, Savitribai Phule Pune University",
     detail: "SGPA 8.0",
+    year: "2024",
   },
   {
     degree: "Bachelor of Computer Applications (BCA)",
     school: "Kamla Nehru Mahavidyalaya, Nagpur",
     detail: "84%",
+    year: "2022",
   },
 ];
 
