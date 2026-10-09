@@ -75,8 +75,6 @@ export default function SkillsCarousel() {
 
   return (
     <div>
-      <p className={`mb-3 ${PIXEL_LABEL}`}>{featuredSkills.length} items · most used first</p>
-
       <div style={{ maskImage: mask, WebkitMaskImage: mask }} className="skills-marquee no-scrollbar -mx-1 overflow-hidden py-1">
         <ul aria-label="Main technologies" className="skills-marquee__track flex w-max">
           {[...featuredSkills, ...featuredSkills].map((skill, index) => {

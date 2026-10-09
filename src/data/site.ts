@@ -50,7 +50,7 @@ export const resume = {
     "Software engineer at a maritime SaaS company since November 2024, with ~1,300 commits and ~1,180 pull requests across 15+ repositories. Founded and architected CVMS, a plugin-based, offline-first ship–shore platform with a transactional-outbox sync foundation and a network-fault simulation arena, and created Ensign, the design system it is built on. One of the main frontend authors of Ecosailer, the production emissions-compliance product: built the Voyage Estimator, rebuilt role-based access control, moved auth to httpOnly cookies, cut polling 10×, removed every “any” type and closed 30 release-blocking defects for 2.4.0. Built the UI and helpdesk of Ecosail Global, the shore hub, from scratch.",
 };
 
-/** The skills carousel on the home page: most relevant first, one area label each. */
+/** The skills carousel on the home page, one area label each. */
 export const featuredSkills: { name: string; area: string }[] = [
   { name: "React", area: "Frontend" },
   { name: "TypeScript", area: "Language" },
