@@ -9,9 +9,6 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 /** Résumé text is plain: drop the **keyword** markers the site uses for emphasis. */
 const plain = (text: string) => text.replace(/\*\*/g, "");
 
-/** Strip the scheme and trailing slash so links read well on paper. */
-const shortUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
-
 const SECTION_LABEL = "text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/50";
 
 function ResumeSection({ title, children }: { title: string; children: ReactNode }) {
@@ -23,7 +20,7 @@ function ResumeSection({ title, children }: { title: string; children: ReactNode
   );
 }
 
-/** A concise CV: the site's content, in the order recruiters read it. Prints as a plain document. */
+/** A concise CV: the site's content, in the order recruiters read it, with a downloadable ATS-friendly PDF. */
 export default function ResumePage() {
   useDocumentTitle("Resume");
   const job = experience[0];
@@ -33,12 +30,12 @@ export default function ResumePage() {
       <div className="print-hidden">
         <PageHeader title="Resume">
           <p>
-            <PsychicText split="words" text="The short version, for recruiters. Print it or save it as a PDF." />
+            <PsychicText split="words" text="The short version, for recruiters. Download the one-page, ATS-friendly PDF." />
           </p>
         </PageHeader>
-        <button type="button" onClick={() => window.print()} className={`mt-6 ${BUTTON_PRIMARY}`}>
-          Print / save as PDF
-        </button>
+        <a href={resume.pdf} download className={`mt-6 ${BUTTON_PRIMARY}`}>
+          Download PDF
+        </a>
       </div>
 
       <article
@@ -53,10 +50,10 @@ export default function ResumePage() {
               {contact.email}
             </a>
             <a href={contact.linkedin} target="_blank" rel="noreferrer" className={LINK_CLASS}>
-              {shortUrl(contact.linkedin)}
+              LinkedIn
             </a>
             <a href={contact.github} target="_blank" rel="noreferrer" className={LINK_CLASS}>
-              {shortUrl(contact.github)}
+              GitHub
             </a>
           </p>
         </header>
@@ -134,7 +131,9 @@ export default function ResumePage() {
                   <span className="block font-medium text-ink">{entry.degree}</span>
                   <span className="block text-ink/70">{entry.school}</span>
                 </span>
-                <span className="text-sm text-ink/60">{entry.detail}</span>
+                <span className="text-right text-sm text-ink/60">
+                  {entry.year} · {entry.detail}
+                </span>
               </li>
             ))}
           </ul>
