@@ -424,6 +424,94 @@ function braveBird({ sprite }: MoveContext) {
   return 2000;
 }
 
+/** Tea, not slime: one splash of matcha that hits the screen, flings droplets and runs down it. */
+function splash(x: number, y: number, delay: number) {
+  const size = random(60, 130);
+  const group = document.createElement("span");
+  group.className = "fx-splash";
+  Object.assign(group.style, { left: `${x}px`, top: `${y}px` });
+  fxLayer().append(group);
+
+  // The puddle: thin and see-through, with a splash edge of rounded lobes — a
+  // curve from each valley to the next that bulges out through a random peak —
+  // and it squashes flat on impact.
+  const puddle = document.createElement("span");
+  puddle.className = "fx-splash__puddle";
+  const half = size / 2;
+  const lobes = Math.round(random(8, 12));
+  const valleys = Array.from({ length: lobes }, (_, k) => {
+    const angle = (k / lobes) * Math.PI * 2;
+    const reach = half * random(0.62, 0.74);
+    return [half + Math.cos(angle) * reach, half + Math.sin(angle) * reach];
+  });
+  const edge = valleys.map((_, k) => {
+    const [vx, vy] = valleys[(k + 1) % lobes];
+    const angle = ((k + 0.5) / lobes) * Math.PI * 2;
+    const reach = half * random(0.95, 1.25);
+    return `Q ${half + Math.cos(angle) * reach} ${half + Math.sin(angle) * reach} ${vx} ${vy}`;
+  });
+  Object.assign(puddle.style, {
+    width: `${size}px`,
+    height: `${size}px`,
+    clipPath: `path("M ${valleys[0][0]} ${valleys[0][1]} ${edge.join(" ")} Z")`,
+  });
+  group.append(puddle);
+  puddle.animate(
+    [
+      { transform: "translate(-50%, -50%) scale(.2, .2)" },
+      { transform: "translate(-50%, -50%) scale(1.35, .7)", offset: 0.4 },
+      { transform: "translate(-50%, -50%) scale(.95, 1.05)", offset: 0.7 },
+      { transform: "translate(-50%, -50%) scale(1)" },
+    ],
+    { duration: 260, delay, easing: "ease-out", fill: "both" },
+  );
+
+  // Droplets flung out from the impact, which land and stay.
+  for (let d = 0; d < 9; d++) {
+    const drop = document.createElement("span");
+    drop.className = "fx-splash__drop";
+    const dot = random(4, 13);
+    Object.assign(drop.style, { width: `${dot}px`, height: `${dot}px` });
+    group.append(drop);
+    const angle = random(0, Math.PI * 2);
+    const reach = size * random(0.6, 1.25);
+    drop.animate(
+      [
+        { transform: "translate(-50%, -50%) scale(0)" },
+        { transform: `translate(calc(-50% + ${Math.cos(angle) * reach}px), calc(-50% + ${Math.sin(angle) * reach}px)) scale(1)` },
+      ],
+      { duration: 220, delay: delay + 20, easing: "cubic-bezier(.2,.8,.4,1)", fill: "both" },
+    );
+  }
+
+  // Drips: thin trails that start a moment after impact and run down under gravity.
+  const drips = Math.round(random(2, 4));
+  for (let d = 0; d < drips; d++) {
+    const drip = document.createElement("span");
+    drip.className = "fx-splash__drip";
+    Object.assign(drip.style, {
+      left: `${random(-size * 0.35, size * 0.35)}px`,
+      top: `${size * random(0.05, 0.25)}px`,
+      width: `${random(4, 9)}px`,
+      height: `${random(90, 260)}px`,
+    });
+    group.append(drip);
+    drip.animate([{ transform: "translateX(-50%) scaleY(0)" }, { transform: "translateX(-50%) scaleY(1)" }], {
+      duration: random(1400, 2200),
+      delay: delay + random(250, 550),
+      easing: "cubic-bezier(.45,0,.75,.6)",
+      fill: "both",
+    });
+  }
+
+  // Then the whole splash thins out and slides away.
+  const fade = group.animate(
+    [{ opacity: 1, transform: "translateY(0)" }, { opacity: 1, offset: 0.7 }, { opacity: 0, transform: "translateY(24px)" }],
+    { duration: 3300, delay, easing: "ease-in", fill: "both" },
+  );
+  fade.onfinish = fade.oncancel = () => group.remove();
+}
+
 function matchaGotcha({ sprite }: MoveContext) {
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -471,7 +559,27 @@ function matchaGotcha({ sprite }: MoveContext) {
       delay: random(700, 1300),
     });
   }
-  return 2600;
+  // The prank: matcha splashes across the screen and runs down it like real liquid.
+  for (let i = 0; i < 8; i++) splash(random(80, width - 80), random(60, height * 0.75), random(260, 1000));
+
+  // ...and it signs its work.
+  const stamp = document.createElement("span");
+  stamp.className = "fx-stamp";
+  stamp.textContent = "GOTCHA!";
+  fxLayer().append(stamp);
+  const slam = stamp.animate(
+    [
+      { transform: "translate(-50%, -50%) rotate(-8deg) scale(3)", opacity: 0 },
+      { transform: "translate(-50%, -50%) rotate(-8deg) scale(.92)", opacity: 1, offset: 0.12 },
+      { transform: "translate(-50%, -50%) rotate(-8deg) scale(1)", opacity: 1, offset: 0.16 },
+      { transform: "translate(-50%, -50%) rotate(-8deg) scale(1)", opacity: 1, offset: 0.8 },
+      { transform: "translate(-50%, -50%) rotate(-8deg) scale(1.1)", opacity: 0 },
+    ],
+    { duration: 2600, delay: 1000, easing: "ease-out", fill: "both" },
+  );
+  slam.onfinish = slam.oncancel = () => stamp.remove();
+  shakePage(6, 360, 1300);
+  return 4300;
 }
 
 const MOVES: Record<MoveId, (ctx: MoveContext) => number> = {

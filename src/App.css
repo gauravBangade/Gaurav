@@ -514,6 +514,68 @@
   background: #fff;
 }
 
+/* Matcha Gotcha's prank: matcha splashed across the screen, and the
+   "GOTCHA!" it stamps over the page. */
+/* One splash: a thin, glossy, see-through puddle, flung droplets and drips
+   that run down from it. Every part shares the same tea colour. */
+.fx-splash {
+  position: absolute;
+  --matcha: rgba(122, 172, 64, 0.72);
+}
+
+.fx-splash__puddle,
+.fx-splash__drop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--matcha);
+}
+
+.fx-splash__puddle {
+  /* A wet sheen: a small highlight and a slightly darker rim. */
+  background:
+    radial-gradient(ellipse at 36% 32%, rgba(255, 255, 255, 0.5) 0 5%, transparent 12%),
+    var(--matcha);
+}
+
+.fx-splash__drop {
+  border-radius: 9999px;
+}
+
+.fx-splash__drip {
+  position: absolute;
+  transform-origin: 50% 0;
+  border-radius: 0 0 9999px 9999px;
+  background: linear-gradient(90deg, rgba(84, 132, 38, 0.8), var(--matcha) 40%, rgba(150, 200, 90, 0.75));
+}
+
+/* The bead that gathers at the bottom of each drip. */
+.fx-splash__drip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 170%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: inherit;
+}
+
+.fx-stamp {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  font-family: "Press Start 2P", "Courier New", monospace;
+  font-size: clamp(2rem, 9vw, 5.5rem);
+  line-height: 1;
+  color: #4a7d27;
+  white-space: nowrap;
+  -webkit-text-stroke: 3px #f2f9e4;
+  paint-order: stroke fill;
+  text-shadow: 6px 6px 0 rgba(30, 50, 15, 0.35);
+}
+
 /* Moonblast's moon: a pale pink disc with a soft glow that charges, then fires. */
 .fx-moon {
   position: absolute;
