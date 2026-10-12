@@ -163,6 +163,8 @@ export type Project = {
   period?: string;
   /** What I did on it. */
   role: string;
+  /** Shown as a wide card with all its numbers on the Work page. */
+  featured?: boolean;
   /** One sentence for lists. */
   blurb: string;
   /** The opening paragraph on the project page. Supports **keyword** markers. */
@@ -182,6 +184,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: "cvms",
+    featured: true,
     title: "CVMS",
     status: "In development",
     period: "Aug 2026 – now",
@@ -294,6 +297,7 @@ export const projects: Project[] = [
   },
   {
     id: "ecosail-global",
+    featured: true,
     title: "Ecosail Global & Helpdesk",
     period: "Apr – Sep 2026",
     role: "Main author of the UI and helpdesk",
@@ -318,6 +322,7 @@ export const projects: Project[] = [
   },
   {
     id: "ecosailer",
+    featured: true,
     title: "Ecosailer reporting & analytics",
     period: "Nov 2024 – now",
     role: "One of the main frontend authors",
@@ -376,6 +381,36 @@ export const projects: Project[] = [
     ],
     impact: ["Proved the CVMS platform and Ensign are portable to a second product."],
     stack: ["NestJS", "Fastify", "Prisma", "PostgreSQL", "React"],
+  },
+];
+
+export type ProjectGroup = {
+  id: string;
+  title: string;
+  intro: string;
+  /** Project ids, in the order they appear in the group. */
+  projectIds: string[];
+};
+
+/** How the Work page groups the projects, by the product they belong to. */
+export const projectGroups: ProjectGroup[] = [
+  {
+    id: "platform",
+    title: "CVMS platform",
+    intro: "The next-generation platform I founded, the design system it runs on, and the first product built on it.",
+    projectIds: ["cvms", "ensign", "partner-portal"],
+  },
+  {
+    id: "ecosailer",
+    title: "Ecosailer",
+    intro: "The production emissions-compliance product crews report in and offices run compliance on.",
+    projectIds: ["ecosailer", "voyage-estimator", "access-control", "code-quality"],
+  },
+  {
+    id: "shore-hub",
+    title: "Ecosail Global",
+    intro: "The shore hub that owns every installation’s master data and runs the helpdesk.",
+    projectIds: ["ecosail-global"],
   },
 ];
 
