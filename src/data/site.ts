@@ -14,13 +14,13 @@
 export const profile = {
   name: "Gaurav Bangade",
   role: "Software Engineer",
-  focus: "Platform architecture & full-stack",
+  focus: "Product engineering · React, TypeScript & Node",
   location: "Pune, India",
   company: "ecoSAIL Infotech",
   /** ISO year-month the current role started. */
   since: "2024-11",
   intro:
-    "I founded **CVMS**, an offline-first ship–shore platform, and **Ensign**, the company’s design system — and shipped **~1,180 PRs** across 15+ repos, from emissions compliance to real-time helpdesks.",
+    "I build product features end to end in **React, TypeScript and Node** — from the production UI of a maritime compliance product to **CVMS**, the offline-first platform I designed, and **Ensign**, the design system it runs on.",
 };
 
 export const contact = {
@@ -33,6 +33,7 @@ export const contact = {
   formEndpoint: "https://formsubmit.co/ajax/b644f029ba3806cd379836408070db72",
   github: "https://github.com/gauravBangade",
   linkedin: "https://www.linkedin.com/in/gaurav-bangade-9a2430222/",
+  website: "https://gaurav-fun.vercel.app",
 };
 
 /** Pages in the header nav. Home is the name on the left. */
@@ -45,11 +46,11 @@ export const pages = [
 
 /** The résumé page's opening lines. */
 export const resume = {
-  /** One-page, ATS-friendly copy in public/. Regenerate it when the content below changes. */
+  /** One-page, ATS-friendly copy in public/, built from this file by `npm run resume`. Rerun it when the content changes. */
   pdf: "/Gaurav-Bangade-Resume.pdf",
-  headline: "Software Engineer — Platform Architecture, Full-Stack & Offline-First Systems",
+  headline: "Product Engineer · React, TypeScript & Node.js · Frontend Platforms & Offline-First Systems",
   summary:
-    "Software engineer at a maritime SaaS company since November 2024, with ~1,300 commits and ~1,180 pull requests across 15+ repositories. Founded and architected CVMS, a plugin-based, offline-first ship–shore platform with a transactional-outbox sync foundation and a network-fault simulation arena, and created Ensign, the design system it is built on. One of the main frontend authors of Ecosailer, the production emissions-compliance product: built the Voyage Estimator, rebuilt role-based access control, moved auth to httpOnly cookies, cut polling 10×, removed every “any” type and closed 30 release-blocking defects for 2.4.0. Built the UI and helpdesk of Ecosail Global, the shore hub, from scratch.",
+    "Software engineer with 2 years on a multi-tenant maritime emissions-compliance SaaS, working across the whole product. One of the main frontend authors of the production app (960+ merged UI pull requests across 9 releases) and the designer of the company’s next platform and its design system. I also lead the work that keeps the product shippable: type safety, build tooling, security, release stabilisation and documentation. Strongest in React and TypeScript; comfortable owning the API in NestJS or Django REST Framework.",
 };
 
 /** The skills carousel on the home page, one area label each. */
@@ -99,38 +100,51 @@ export const experience: Experience[] = [
     start: "2024-11",
     end: null,
     summary:
-      "Joined to build a production emissions-compliance product. Since then I have founded two codebases, created the company’s design system and set the architecture its next platform is built on.",
+      "Joined to build the frontend of a production emissions-compliance product. Grew into owning features end to end, designing the company’s next platform and writing ~8,000 lines of docs that moved a Django team onto NestJS and Prisma.",
     metrics: [
-      { value: "~1,180", label: "pull requests across 15+ repos" },
-      { value: "4", label: "products shipped or founded" },
-      { value: "30", label: "release-blocking defects closed for 2.4.0" },
+      { value: "960+", label: "merged PRs on the production UI" },
       { value: "10×", label: "fewer polling requests" },
+      { value: "30", label: "release blockers closed for 2.4.0" },
+      { value: "3×", label: "faster production builds" },
     ],
     highlights: [
       {
-        label: "CVMS",
+        label: "Production frontend",
+        text: "Built core features of **Ecosailer**, used by ship crews and shore offices: **reporting wizards** that work on phones and tablets, **analytics dashboards**, user management and a trial period on a server-owned clock.",
+      },
+      {
+        label: "Voyage Estimator",
+        text: "Built it end to end, UI and API: it estimates a voyage’s **CO₂, CII rating and EU ETS cost** before it sails. Moved every regulatory constant into the database, so rule changes ship as **data, not a deploy**. 55 tests.",
+      },
+      {
+        label: "Platform architecture",
         status: "In development",
-        text: "Founded and architected a **plugin-based, offline-first** ship–shore platform: lint-enforced module boundaries, a **transactional outbox** with a hybrid logical clock, and a simulation arena that tests sync under **10 satellite-link profiles** and clock skew.",
+        text: "Designed **CVMS**, the platform future products will be built on: one NestJS API and one React app assembled from **module manifests**, with module boundaries **enforced by lint and CI**. The channel-partner portal already runs on its patterns.",
       },
       {
-        label: "Ensign design system",
-        text: "Created a **26-section, token-driven** design system with light and dark themes — now the only styling system allowed in CVMS and the channel-partner portal.",
+        label: "Offline-first sync",
+        status: "In development",
+        text: "Built the sync foundation for vessels on slow, unreliable **satellite links** (transactional outbox, hybrid logical clock) and a **test harness** that checks every synced row under **10 simulated network profiles** and clock skew.",
       },
       {
-        label: "Ecosailer",
-        text: "One of the main frontend authors of the production product (**960+ merged PRs** on its UI): built the **Voyage Estimator**, reporting wizards, analytics dashboards and the trial-period feature across **9 release lines**.",
+        label: "Design system",
+        text: "Created **Ensign**, a token-based design system with light and dark themes. It is now the required UI layer for **2 products**.",
       },
       {
         label: "Access control & security",
-        text: "Rebuilt **RBAC** with a privilege ceiling and a deny-by-default route manifest, moved auth to **httpOnly cookies**, added XSS sanitisation and ran a security audit across all **4 company repos**.",
+        text: "Rebuilt **RBAC** so nobody can grant more access than they hold and every route is **denied by default**; moved auth tokens to **httpOnly cookies**, added XSS sanitisation and audited all **4 company repos**.",
       },
       {
-        label: "Ecosail Global",
-        text: "Built the shore hub’s **UI from scratch** and designed its **helpdesk**: ticket lifecycles, webhooks, machine-to-machine API keys and real-time WebSocket notifications.",
+        label: "Real-time helpdesk",
+        text: "Built the shore hub’s UI from scratch (**React 19**, TanStack Query) and its helpdesk: ticket workflows, **webhooks**, API keys and live **WebSocket** notifications.",
       },
       {
-        label: "Code quality",
-        text: "Removed **every “any” type** from the UI in a 6-phase, lint-locked migration that surfaced real bugs, cut polling **10×** and closed **12 critical and 18 high-priority** defects to ship 2.4.0.",
+        label: "Build tooling",
+        text: "Migrated the production frontend from unmaintained **Create React App** to **Vite**: about **3× faster production builds** and **12–35× faster dev-server start-up**, plus TypeScript 4.9 → **5.3** and Jest → **Vitest**.",
+      },
+      {
+        label: "Code quality & releases",
+        text: "Led a 6-phase migration that removed **every “any” type** from the UI and surfaced real bugs, cut polling traffic **10×**, and closed **12 critical and 18 high-priority** defects to ship release 2.4.0.",
       },
     ],
   },
@@ -140,18 +154,13 @@ export type SkillGroup = { label: string; items: string[] };
 
 export const skills: SkillGroup[] = [
   { label: "Languages", items: ["TypeScript", "JavaScript", "Python", "SQL"] },
-  {
-    label: "Frontend",
-    items: ["React 18/19", "TanStack Router, Query, Table & Form", "Redux", "Zustand", "Formik", "Zod", "ECharts", "Recharts", "Tailwind CSS", "Vite"],
-  },
-  { label: "Backend", items: ["NestJS", "Fastify", "Prisma", "Django REST Framework", "Django Channels", "pg-boss", "Node.js", "Express"] },
+  { label: "Frontend", items: ["React 18/19", "TanStack Query, Router & Table", "Redux", "Zustand", "Zod", "Tailwind CSS", "Vite", "ECharts"] },
+  { label: "Backend", items: ["Node.js", "NestJS", "Fastify", "Prisma", "Django REST Framework", "Django Channels", "Express"] },
   { label: "Data", items: ["PostgreSQL", "MySQL", "Redis", "MongoDB"] },
-  { label: "Distributed systems", items: ["Offline-first sync", "Transactional outbox", "Hybrid logical clocks", "WebSockets", "Fault simulation"] },
-  { label: "Security", items: ["RBAC & privilege ceilings", "httpOnly cookie auth", "Argon2id", "XSS sanitisation", "Security audits"] },
-  { label: "Quality", items: ["Vitest", "Playwright", "Testing Library", "MSW", "ESLint ratchets"] },
-  { label: "Design", items: ["Design systems", "Design tokens", "Accessible data palettes", "Responsive UI"] },
-  { label: "Maritime domain", items: ["IMO CII", "EU MRV / ETS", "FuelEU", "IMO DCS", "Bunkering & ROB"] },
-  { label: "AI / LLM", items: ["LangChain", "RAG", "FAISS", "MCP", "Agent skills"] },
+  { label: "Architecture", items: ["Design systems", "Modular monoliths", "Offline-first sync", "WebSockets", "RBAC & auth security"] },
+  { label: "Testing & tooling", items: ["Vitest", "Playwright", "Testing Library", "MSW", "ESLint", "Docker", "Git"] },
+  { label: "AI / LLM", items: ["LangChain", "RAG", "FAISS", "MCP"] },
+  { label: "Domain", items: ["Maritime emissions compliance: IMO CII, EU MRV / ETS, FuelEU"] },
 ];
 
 export type Project = {
@@ -345,6 +354,33 @@ export const projects: Project[] = [
     stack: ["React 18", "TypeScript", "Redux", "Formik", "ECharts", "Django", "Celery"],
   },
   {
+    id: "vite-migration",
+    title: "CRA → Vite migration",
+    period: "Feb 2026",
+    role: "Planned and carried out the migration",
+    blurb: "Moved the production frontend off unmaintained Create React App: about 3× faster builds and 12–35× faster dev start-up.",
+    summary:
+      "Moved the production frontend from **Create React App** to **Vite 5** with the source code unchanged, so every gain below comes from the build tool.",
+    problem:
+      "CRA has been **unmaintained since 2022**. It held the project on TypeScript 4.9, hid the build config behind ejecting, and made the dev server compile the whole app before a single page would open.",
+    details: [
+      "Replaced CRA with **Vite 5** and moved TypeScript from **4.9 to 5.3**.",
+      "Replaced Jest with **Vitest**, so tests share the app’s own config.",
+      "Opened up the build: manual **code splitting**, a dev **proxy**, **path aliases** and room for plugins (a CSP plugin came later), all without ejecting.",
+      "Modern output: native ES modules in dev and newer JavaScript in production, part of why the **bundle got smaller**.",
+    ],
+    impact: [
+      "Production builds about **3× faster** and dev-server start-up **12–35× faster**, measured on the same source before and after.",
+      "Pages compile on demand in dev, so opening one screen no longer waits for the whole app.",
+    ],
+    metrics: [
+      { value: "~3×", label: "faster production builds" },
+      { value: "12–35×", label: "faster dev-server start-up" },
+      { value: "4.9 → 5.3", label: "TypeScript version" },
+    ],
+    stack: ["Vite 5", "TypeScript 5.3", "Vitest", "React"],
+  },
+  {
     id: "code-quality",
     title: "Code quality & releases",
     period: "Nov 2024 – Oct 2026",
@@ -404,7 +440,7 @@ export const projectGroups: ProjectGroup[] = [
     id: "ecosailer",
     title: "Ecosailer",
     intro: "The production emissions-compliance product crews report in and offices run compliance on.",
-    projectIds: ["ecosailer", "voyage-estimator", "access-control", "code-quality"],
+    projectIds: ["ecosailer", "voyage-estimator", "access-control", "vite-migration", "code-quality"],
   },
   {
     id: "shore-hub",
@@ -435,7 +471,7 @@ export const personalProjects: PersonalProject[] = [
   },
   {
     title: "JSON Toolkit",
-    description: "Format, validate and explore JSON as an interactive graph — built for this site, and you can use it now.",
+    description: "Format, validate and explore JSON as an interactive graph. Live on my portfolio site.",
     stack: ["React", "TypeScript", "React Flow"],
     to: "/json-toolkit",
   },

@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 import PsychicText from "../components/PsychicText";
-import { StatusLabel } from "../components/site/ProjectList";
 import { PageHeader } from "../components/site/Section";
 import { BUTTON_PRIMARY, CARD, LINK_CLASS, formatMonth } from "../components/site/styles";
-import { contact, education, experience, personalProjects, profile, projects, resume, skills, spokenLanguages } from "../data/site";
+import { contact, education, experience, personalProjects, profile, resume, skills, spokenLanguages } from "../data/site";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 /** Résumé text is plain: drop the **keyword** markers the site uses for emphasis. */
@@ -100,22 +99,11 @@ export default function ResumePage() {
           </p>
         </ResumeSection>
 
-        <ResumeSection title="Projects">
+        <ResumeSection title="Side projects">
           <ul className="space-y-2.5 print:space-y-1.5">
-            {projects.slice(0, 4).map((project) => (
-              <li key={project.id} className="print:break-inside-avoid">
-                <span className="inline-flex flex-wrap items-center gap-2 font-medium text-ink">
-                  {project.title}
-                  {project.status && <StatusLabel text={project.status} />}
-                </span>
-                <span className="block text-ink/75">{project.blurb}</span>
-                <span className="block text-xs text-ink/50">{project.stack.join(" · ")}</span>
-              </li>
-            ))}
             {personalProjects.map((project) => (
               <li key={project.title} className="print:break-inside-avoid">
                 <span className="font-medium text-ink">{project.title}</span>
-                <span className="text-sm text-ink/50"> · personal project</span>
                 <span className="block text-ink/75">{project.description}</span>
                 <span className="block text-xs text-ink/50">{project.stack.join(" · ")}</span>
               </li>
