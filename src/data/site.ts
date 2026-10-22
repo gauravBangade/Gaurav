@@ -50,7 +50,7 @@ export const resume = {
   pdf: "/Gaurav-Bangade-Resume.pdf",
   headline: "Product Engineer · React, TypeScript & Node.js · Frontend Platforms & Offline-First Systems",
   summary:
-    "Software engineer with 2 years on a multi-tenant maritime emissions-compliance SaaS, working across the whole product. One of the main frontend authors of the production app (960+ merged UI pull requests across 9 releases) and the designer of the company’s next platform and its design system. I also lead the work that keeps the product shippable: type safety, security, release stabilisation and documentation. Strongest in React and TypeScript; comfortable owning the API in NestJS or Django REST Framework.",
+    "Software engineer with 2 years on a multi-tenant maritime emissions-compliance SaaS, working across the whole product. One of the main frontend authors of the production app (960+ merged UI pull requests across 9 releases) and the designer of the company’s next platform and its design system. I also lead the work that keeps the product shippable: type safety, build tooling, security, release stabilisation and documentation. Strongest in React and TypeScript; comfortable owning the API in NestJS or Django REST Framework.",
 };
 
 /** The skills carousel on the home page, one area label each. */
@@ -105,7 +105,7 @@ export const experience: Experience[] = [
       { value: "960+", label: "merged PRs on the production UI" },
       { value: "10×", label: "fewer polling requests" },
       { value: "30", label: "release blockers closed for 2.4.0" },
-      { value: "2", label: "products on my design system" },
+      { value: "3×", label: "faster production builds" },
     ],
     highlights: [
       {
@@ -137,6 +137,10 @@ export const experience: Experience[] = [
       {
         label: "Real-time helpdesk",
         text: "Built the shore hub’s UI from scratch (**React 19**, TanStack Query) and its helpdesk: ticket workflows, **webhooks**, API keys and live **WebSocket** notifications.",
+      },
+      {
+        label: "Build tooling",
+        text: "Migrated the production frontend from unmaintained **Create React App** to **Vite**: about **3× faster production builds** and **12–35× faster dev-server start-up**, plus TypeScript 4.9 → **5.3** and Jest → **Vitest**.",
       },
       {
         label: "Code quality & releases",
@@ -350,6 +354,33 @@ export const projects: Project[] = [
     stack: ["React 18", "TypeScript", "Redux", "Formik", "ECharts", "Django", "Celery"],
   },
   {
+    id: "vite-migration",
+    title: "CRA → Vite migration",
+    period: "Feb 2026",
+    role: "Planned and carried out the migration",
+    blurb: "Moved the production frontend off unmaintained Create React App: about 3× faster builds and 12–35× faster dev start-up.",
+    summary:
+      "Moved the production frontend from **Create React App** to **Vite 5** with the source code unchanged, so every gain below comes from the build tool.",
+    problem:
+      "CRA has been **unmaintained since 2022**. It held the project on TypeScript 4.9, hid the build config behind ejecting, and made the dev server compile the whole app before a single page would open.",
+    details: [
+      "Replaced CRA with **Vite 5** and moved TypeScript from **4.9 to 5.3**.",
+      "Replaced Jest with **Vitest**, so tests share the app’s own config.",
+      "Opened up the build: manual **code splitting**, a dev **proxy**, **path aliases** and room for plugins (a CSP plugin came later), all without ejecting.",
+      "Modern output: native ES modules in dev and newer JavaScript in production, part of why the **bundle got smaller**.",
+    ],
+    impact: [
+      "Production builds about **3× faster** and dev-server start-up **12–35× faster**, measured on the same source before and after.",
+      "Pages compile on demand in dev, so opening one screen no longer waits for the whole app.",
+    ],
+    metrics: [
+      { value: "~3×", label: "faster production builds" },
+      { value: "12–35×", label: "faster dev-server start-up" },
+      { value: "4.9 → 5.3", label: "TypeScript version" },
+    ],
+    stack: ["Vite 5", "TypeScript 5.3", "Vitest", "React"],
+  },
+  {
     id: "code-quality",
     title: "Code quality & releases",
     period: "Nov 2024 – Oct 2026",
@@ -409,7 +440,7 @@ export const projectGroups: ProjectGroup[] = [
     id: "ecosailer",
     title: "Ecosailer",
     intro: "The production emissions-compliance product crews report in and offices run compliance on.",
-    projectIds: ["ecosailer", "voyage-estimator", "access-control", "code-quality"],
+    projectIds: ["ecosailer", "voyage-estimator", "access-control", "vite-migration", "code-quality"],
   },
   {
     id: "shore-hub",
